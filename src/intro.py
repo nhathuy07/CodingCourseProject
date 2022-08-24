@@ -18,9 +18,14 @@ class Intro():
         self.current_page = page
     def flip(self):
         self.current_page += 1
+        self.alpha = 0
     def show(self, display: pygame.surface.Surface):
         from common import config
-        display.fill((0, 0, 0))
+        
+        if self.current_page == 0:
+            display.fill((0, 0, 0))
+        else:
+            display.blit(self.intro_scenes[self.current_page - 1], (0, 0))
         current_scene = self.intro_scenes[self.current_page]
         if self.alpha <= 255:
             self.alpha += config.TRANSISTION_SPEED
