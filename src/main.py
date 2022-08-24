@@ -29,15 +29,14 @@ def intro():
     intro = Intro()
     intro_ended = False
     while not intro_ended:
-        
-        intro.show(display)
-        for ev in pygame.event.get():
+        for ev in pygame.event.get((pygame.QUIT, pygame.MOUSEBUTTONDOWN, events.MAIN_MENU, events.PLAY)):
             if ev.type == pygame.QUIT:
-                return None
+                pygame.event.post(pygame.event.Event(events.MAIN_MENU))
             elif ev.type == pygame.MOUSEBUTTONDOWN:
-                if intro.current_page < intro.page_count:
-                    intro.flip()
-
+                intro.flip()
+            else:
+                return ev.type
+        intro.show(display)
         pygame.display.flip()
         clock.tick(60)
 
@@ -47,6 +46,10 @@ if __name__ == "__main__":
     while True:
         menu_instance = menu(session)
         if events.PLAY in menu_instance:
-            intro()
+            intro_instance = intro()
+            if intro_instance == events.PLAY:
+                pass
+            elif intro_instance == events.MAIN_MENU:
+                continue
         elif events.ABOUT in menu_instance:
             MessageBox(None, "Demo", "Demo", 0)

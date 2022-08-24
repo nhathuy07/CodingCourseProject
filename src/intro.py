@@ -12,12 +12,16 @@ class Intro():
         self.alpha = 0
         with open(self.dialogue_path) as r:
             self.intro_lines = json.load(r)["intro_story"]
-        self.page_count = len(self.intro_lines)
+        self.page_count = len(self.intro_scenes)
         self.current_page = 0
     def jumpto(self, page):
         self.current_page = page
     def flip(self):
-        self.current_page += 1
+        from common.events import PLAY
+        if self.current_page < self.page_count - 1:
+            self.current_page += 1
+        else:
+            pygame.event.post(pygame.event.Event(PLAY))
         self.alpha = 0
     def show(self, display: pygame.surface.Surface):
         from common import config

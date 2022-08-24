@@ -36,7 +36,7 @@
       },
       {
         "speaker": "Roger",
-        "line": "No problem. There's a cave not far away. You can go down there, mine some ores, then come back here and pay me. Just one thing, it's very dangerous down there, be careful or you might end up like your spacecraft."
+        "line": "No problem. There's a cave not far away. You can go down there and mine some ores for me. Just one thing, it's very dangerous down there, be careful or you might end up like your spacecraft."
       }
     ],
     [
@@ -61,14 +61,6 @@
       {
         "speaker": "Roger",
         "line": "You're welcome!"
-      },
-      {
-        "speaker": "Roger",
-        "line": "Uh...I think it's time to say goodbye now. I hope that you'll reach your destination safe and sound."
-      },
-      {
-        "speaker": "Mark",
-        "line": "I will, for sure."
       }
     ]
   ],
