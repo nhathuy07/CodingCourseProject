@@ -1,0 +1,76 @@
+{
+  "intro_story": [
+    "It's the year 2050. Recent breakthroughs in space technology have made it more common to use robots for space missions. This method of space exploration requires less resource and time, as robots don't need food, drink and oxygen, and their batteries can be recharged using solar panel.",
+    "Mark, an astronaut robot, is travelling through space in search for life outside planet Earth. Things have been quite good so far, ...",
+    "...when suddenly, an asteroid flies past, colliding with his spaceship. The collision destroyed the rear compartment of the ship, forcing him to perform a crash landing.",
+    "Fortunately, Mark managed to land on a nearby planet. Now, he's seeking for help to repair his severely damaged spacecraft.",
+    "After a while, Mark found a vehicle rescuer named Roger."
+  ],
+  "dialogues": [
+    [
+      {
+        "speaker": "Roger",
+        "line": "Welcome to Roger's Vehicle Rescue Service. We repair any vehicle ever existed. How can I help you?"
+      },
+      {
+        "speaker": "Mark",
+        "line": "Oh... A large meteorite hit my spacecraft, destroying several vital parts."
+      },
+      {
+        "speaker": "Roger",
+        "line": "Hit by a large meteorite... All vital parts damaged... What a serious accident!. Could you guide me to the spaceship's location?"
+      },
+      {
+        "speaker": "Mark",
+        "line": "Sure!"
+      }
+    ],
+    [
+      {
+        "speaker": "Roger",
+        "line": "Well...After quick inspection, I could see that the collision has destroyed the ship's thrusters, communication device, energy core and left a big hole on the shell. Unfortunately, repairing these will be very expensive."
+      },
+      {
+        "speaker": "Mark",
+        "line": "I know... But I have almost no cash or anything like that."
+      },
+      {
+        "speaker": "Roger",
+        "line": "No problem. There's a cave not far away. You can go down there, mine some ores, then come back here and pay me. Just one thing, it's very dangerous down there, be careful or you might end up like your spacecraft."
+      }
+    ],
+    [
+      {
+        "speaker": "Mark",
+        "line": "Hi! I'm back with some ores!"
+      },
+      {
+        "speaker": "Roger",
+        "line": "Well done! Here's your {part}."
+      }
+    ],
+    [
+      {
+        "speaker": "Roger",
+        "line": "Well...Your spacecraft is fully fixed."
+      },
+      {
+        "speaker": "Mark",
+        "line": "Wow! Thank you so much for your help!"
+      },
+      {
+        "speaker": "Roger",
+        "line": "You're welcome!"
+      },
+      {
+        "speaker": "Roger",
+        "line": "Uh...I think it's time to say goodbye now. I hope that you'll reach your destination safe and sound."
+      },
+      {
+        "speaker": "Mark",
+        "line": "I will, for sure."
+      }
+    ]
+  ],
+  "ending": "With Roger's help, Mark is able to continue his journey to a faraway planet, in search of life outside Earth."
+}

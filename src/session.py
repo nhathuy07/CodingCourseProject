@@ -6,7 +6,8 @@ import os
 class Session:
     def __init__(self):
         self.section = None
-        self.playerData: Dict[str, list] = {
+        self.world = None
+        self.playerData = {
             "current_lvl" : None,
             "earned_items": [],
         }
@@ -51,7 +52,3 @@ class Session:
         self.playerData['current_lvl'] = new_lvl
     def get_lvl(self):
         return self.playerData['current_lvl']
-s = Session()
-s.update_savefile()
-
-print(s.playerData["earned_items"])

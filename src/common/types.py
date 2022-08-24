@@ -13,3 +13,9 @@ class Items(Enum):
     THRUSTER = 1
     COMM_SYSTEM = 2
     ENERGY_CORE = 3
+
+class MenuOption(Enum):
+    RESUME = 0
+    RESTART_OR_START = 1
+    ABOUT = 2
+    HELP = 3
