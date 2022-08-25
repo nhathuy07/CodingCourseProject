@@ -42,13 +42,14 @@ def intro():
 
 if __name__ == "__main__":
     session = Session()
-    
+
     while True:
+        pygame.event.clear()
         menu_instance = menu(session)
         if events.PLAY in menu_instance:
             intro_instance = intro()
             if intro_instance == events.PLAY:
-                pass
+                print("Entering game...")
             elif intro_instance == events.MAIN_MENU:
                 continue
         elif events.ABOUT in menu_instance:
