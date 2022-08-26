@@ -28,7 +28,7 @@ def intro(session: Session):
     clock = pygame.time.Clock()
     
     intro = Intro()
-    dialogue = Dialogue(session.dialogue_data)
+    dialogue = Dialogue(session)
     intro_ended = False
     dialogue_ended = False
     while not intro_ended:
@@ -48,16 +48,17 @@ def intro(session: Session):
     while not dialogue_ended:
         #display.fill((0, 0, 0))
         
-        for ev in pygame.event.get((pygame.QUIT, pygame.MOUSEBUTTONDOWN, events.MAIN_MENU, events.PLAY)):
+        for ev in pygame.event.get((pygame.QUIT, pygame.MOUSEBUTTONDOWN, events.MAIN_MENU, events.PLAY, events.NEXT_DIALOG_SECTION)):
             if ev.type == pygame.QUIT:
                 pygame.event.post(pygame.event.Event(events.MAIN_MENU))
                 dialogue_ended = True
             elif ev.type == pygame.MOUSEBUTTONDOWN:
                 dialogue.next_line()
-            else:
-                return ev.type
+            elif ev.type == events.NEXT_DIALOG_SECTION:
+                if dialogue.section == 0:
+                    dialogue.set_section(1)
         
-        dialogue.show(display, session, section=0)
+        dialogue.show(display, session)
         pygame.display.flip()
         clock.tick(60)
 

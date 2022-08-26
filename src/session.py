@@ -26,6 +26,10 @@ class Session:
         for x in Path(self.character_sprite_dir).glob("*"):
             self.avatars[os.path.basename(str(x))] = utils.image_scale(utils.load_img(str(os.path.join(x, "Avatar.png"))).convert_alpha(), 0.8)
 
+        self.dialogue_scenes_path = paths.ASSETS_PATH / "dialogue_scenes"
+        self.dialogue_scenes = tuple(map(utils.load_img, Path(self.dialogue_scenes_path).glob("*.png")))
+        
+
     def load_or_create_savefile(self):
         import json
         from common import paths
