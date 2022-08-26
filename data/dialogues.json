@@ -14,11 +14,11 @@
       },
       {
         "speaker": "Mark",
-        "line": "Oh... A large meteorite hit my spacecraft, destroying several vital parts."
+        "line": "Oh... A large meteorite hit my spacecraft and left a big hole on it."
       },
       {
         "speaker": "Roger",
-        "line": "Hit by a large meteorite... All vital parts damaged... What a serious accident!. Could you guide me to the spaceship's location?"
+        "line": "What a serious accident! Could you guide me to the spaceship's location?"
       },
       {
         "speaker": "Mark",
@@ -28,7 +28,7 @@
     [
       {
         "speaker": "Roger",
-        "line": "Well...After quick inspection, I could see that the collision has destroyed the ship's thrusters, communication device, energy core and left a big hole on the shell. Unfortunately, repairing these will be very expensive."
+        "line": "Well...After quick inspection, I could see that the collision has destroyed the ship's thrusters, communication device and energy core. Repairing these will be very expensive."
       },
       {
         "speaker": "Mark",

@@ -11,7 +11,8 @@ def load_img(path, scaling = config.DISPLAY_SCALING):
     img = transform.smoothscale(img, (img.get_width() * scaling, img.get_height() * scaling))
     return img
 
-
+def image_scale(surface: surface.Surface, scale: float):
+    return transform.smoothscale(surface, (surface.get_width() * scale, surface.get_height() * scale))
 
 def drawText(surface, text, color, rect, font, aa=True, bkg=None):
     """Simple Text Wrapper. 

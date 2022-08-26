@@ -5,12 +5,27 @@ import os
 
 class Session:
     def __init__(self):
+        import json
+        from common import paths, utils
+        from pathlib import Path
+        from pygame import display, transform
+        display.init()
+        display.set_mode()
         self.section = None
         self.world = None
         self.playerData = {
             "current_lvl" : None,
             "earned_items": [],
         }
+        self.dialogue_path = paths.DATA_PATH / "dialogues.json"
+        self.character_sprite_dir = paths.ASSETS_PATH / "characters"
+        with open(self.dialogue_path, "r") as dialogueFileIOWrapper:
+            self.dialogue_data = json.load(dialogueFileIOWrapper)
+        
+        self.avatars = {}
+        for x in Path(self.character_sprite_dir).glob("*"):
+            self.avatars[os.path.basename(str(x))] = utils.image_scale(utils.load_img(str(os.path.join(x, "Avatar.png"))).convert_alpha(), 0.8)
+
     def load_or_create_savefile(self):
         import json
         from common import paths
