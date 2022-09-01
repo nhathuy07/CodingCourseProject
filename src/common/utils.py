@@ -1,4 +1,3 @@
-
 from pygame import image, display, Rect
 from pygame import surface, transform
 from common import config
@@ -6,16 +5,23 @@ from common import config
 display.init()
 display.set_mode()
 
-def load_img(path, scaling = config.DISPLAY_SCALING):
+
+def load_img(path, scaling=config.DISPLAY_SCALING):
     img = image.load(path).convert_alpha()
-    img = transform.smoothscale(img, (img.get_width() * scaling, img.get_height() * scaling))
+    img = transform.smoothscale(
+        img, (img.get_width() * scaling, img.get_height() * scaling)
+    )
     return img
 
+
 def image_scale(surface: surface.Surface, scale: float):
-    return transform.smoothscale(surface, (surface.get_width() * scale, surface.get_height() * scale))
+    return transform.smoothscale(
+        surface, (surface.get_width() * scale, surface.get_height() * scale)
+    )
+
 
 def drawText(surface, text, color, rect, font, aa=True, bkg=None):
-    """Simple Text Wrapper. 
+    """Simple Text Wrapper.
     Learn more at https://www.pygame.org/wiki/TextWrap#:~:text=Simple%20Text%20Wrapping%20for%20pygame.&text=Simple%20function%20that%20will%20draw,make%20the%20line%20closer%20together."""
     # draw some text into an area of a surface
     # automatically wraps words
@@ -38,8 +44,8 @@ def drawText(surface, text, color, rect, font, aa=True, bkg=None):
         while font.size(text[:i])[0] < rect.width and i < len(text):
             i += 1
 
-        # if we've wrapped the text, then adjust the wrap to the last word      
-        if i > len(text): 
+        # if we've wrapped the text, then adjust the wrap to the last word
+        if i > len(text):
             i = text.rfind(" ", 0, i) + 1
 
         # render the line and blit it to the surface

@@ -1,2 +1,1 @@
 from unicodedata import name
-

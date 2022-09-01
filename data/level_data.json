@@ -1,0 +1,32 @@
+{
+    "SHELL": {
+        "Scene": "BlueCave",
+        "Items": {
+            "Grey": 7,
+            "Yellow": 4
+        }
+    },
+    "THRUSTER": {
+        "Scene": "BlueCave_Harder",
+        "Items": {
+            "Grey": 6,
+            "Yellow": 4,
+            "Green": 3
+        }
+    },
+    "COMM_SYSTEM": {
+        "Scene": "LavaCave",
+        "Items": {
+            "Grey": 4,
+            "Yellow": 4,
+            "Green": 5,
+            "Purple": 3
+        }
+    },
+    "ENERGY_CORE": {
+        "Scene": "DarkCave",
+        "Items": {
+            "Energy_Bar": 8
+        }
+    }
+}

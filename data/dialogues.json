@@ -68,5 +68,18 @@
       }
     ]
   ],
-  "ending": "With Roger's help, Mark is able to continue his journey to a faraway planet, in search of life outside Earth."
+  "boss_fight": [
+    {
+      "intro": ["With Roger's help, Mark is confident that he can contiue his journey.", "But he's seriously wrong! An angry giant is blocking his way, ready to smash him to pieces."]
+    },
+    {
+      "dialogue": [
+        {
+          "speaker": "Monster",
+          "line": "How dare you killed my people! I won't let you get away with that!"
+        }
+      ]
+    }
+  ]
+
 }

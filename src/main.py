@@ -1,78 +1,73 @@
-
-import pygame
-from dialogue_handler import Dialogue
-from intro import Intro
-from mainMenu import MainMenu
-from common import config
-from common import events
+from common.types import Items
+from preload_scr import PreLoadScr
 from session import Session
+from mainMenu import MainMenu
+from intro import Intro
+from dialogue_handler import Dialogue
+from level_selection_menu import LvSelection
+import pygame
+from common import config, events
 
-import ctypes
-MessageBox = ctypes.windll.user32.MessageBoxW
-
-def menu(session):
-    display = pygame.display.set_mode(config.get_window_size())
-    mainMenu = MainMenu(session=session, display=display)
-    user_in_menu = True
-    while user_in_menu:
-        mainMenu.run([e for e in pygame.event.get()])
-        eventList = [ev.type for ev in pygame.event.get((events.ABOUT, events.HELP, events.PLAY, events.RESUME))]
-        if len(eventList) != 0:
-            user_in_menu = False
-        else:
-            pygame.display.flip()
-    return eventList
-
-def intro(session: Session):
-    display = pygame.display.set_mode(config.get_window_size())
-    clock = pygame.time.Clock()
-    
-    intro = Intro()
-    dialogue = Dialogue(session)
-    intro_ended = False
-    dialogue_ended = False
-    while not intro_ended:
-        for ev in pygame.event.get((pygame.QUIT, pygame.MOUSEBUTTONDOWN, events.MAIN_MENU, events.PLAY)):
-            if ev.type == pygame.QUIT:
-                pygame.event.post(pygame.event.Event(events.MAIN_MENU))
-                dialogue_ended = True
-            elif ev.type == pygame.MOUSEBUTTONDOWN:
-                intro.flip()
-            else:
-                intro_ended = True
-        intro.show(display)
-        pygame.display.flip()
-        clock.tick(60)
-
-
-    while not dialogue_ended:
-        #display.fill((0, 0, 0))
-        
-        for ev in pygame.event.get((pygame.QUIT, pygame.MOUSEBUTTONDOWN, events.MAIN_MENU, events.PLAY, events.NEXT_DIALOG_SECTION)):
-            if ev.type == pygame.QUIT:
-                pygame.event.post(pygame.event.Event(events.MAIN_MENU))
-                dialogue_ended = True
-            elif ev.type == pygame.MOUSEBUTTONDOWN:
-                dialogue.next_line()
-            elif ev.type == events.NEXT_DIALOG_SECTION:
-                if dialogue.section == 0:
-                    dialogue.set_section(1)
-        
-        dialogue.show(display, session)
-        pygame.display.flip()
-        clock.tick(60)
 
 if __name__ == "__main__":
     session = Session()
-
+    display = pygame.display.set_mode(config.get_window_size())
+    clock = pygame.time.Clock()
+    current_screen = MainMenu(session, display)
     while True:
-        pygame.event.clear()
-        menu_instance = menu(session)
-        if events.PLAY in menu_instance:
-            intro_instance = intro(session)
-            if intro_instance == events.PLAY:
-                print("Entering game...")
-            elif intro_instance == events.MAIN_MENU:
-                continue
-        elif events.ABOUT in menu_instance:
-            MessageBox(None, "Demo", "Demo", 0)
+        pygame.event.set_allowed((events.ABOUT, events.INTRODUCTION_DIALOGUE))
+        # update screens
+        if type(current_screen).__name__ == "MainMenu":
+            current_screen.update([e for e in pygame.event.get()])
+        elif type(current_screen).__name__ == "Intro":
+            current_screen.update(display)
+        elif type(current_screen).__name__ == "Dialogue":
+            current_screen.update(display, session)
+        elif type(current_screen).__name__ == "LvSelection":
+            current_screen.update(session, display)
+        elif type(current_screen).__name__ == "PreLoadScr":
+            current_screen.update(session, display)
+
+        # handle events
+        allowedEvents = (
+            events.PLAY,
+            events.RESUME,
+            events.ABOUT,
+            pygame.MOUSEBUTTONDOWN,
+            pygame.QUIT,
+            events.INTRODUCTION_DIALOGUE,
+            events.GO_TO_LV_SELECTION,
+            events.PRELOAD_SCREEN,
+        )
+        levelCodes = [x.value for x in Items]
+
+        for e in pygame.event.get(eventtype=(*allowedEvents, *levelCodes)):
+            if e.type == events.PLAY:
+                session.override_savefile()
+                current_screen = Intro()
+            elif e.type == pygame.MOUSEBUTTONDOWN:
+                if type(current_screen).__name__ == "Intro":
+                    current_screen.flip()
+                elif type(current_screen).__name__ == "Dialogue":
+                    current_screen.next_line()
+                    current_screen.update(display, session)
+
+            elif e.type == events.INTRODUCTION_DIALOGUE:
+
+                current_screen = Dialogue(session, (0, 1))
+            elif e.type == events.GO_TO_LV_SELECTION:
+                current_screen = LvSelection()
+                pygame.event.set_blocked((events.ABOUT, events.INTRODUCTION_DIALOGUE))
+
+            elif e.type == events.RESUME:
+                current_screen = LvSelection()
+                pygame.event.set_blocked((events.ABOUT, events.INTRODUCTION_DIALOGUE))
+
+            elif e.type in [x.value for x in Items]:
+                current_screen = PreLoadScr(session, Items(e.type))
+
+            elif e.type == pygame.QUIT:
+                quit()
+
+        pygame.display.flip()
+        clock.tick(120)
