@@ -68,7 +68,6 @@ class Session:
         self.level_data_dir = paths.DATA_PATH / "level_data.json"
         with open(self.level_data_dir, "r") as levelDataFileIOWrapper:
             self.level_data = json.load(levelDataFileIOWrapper)
-        
 
         self.lv_selection_bg = utils.load_img(self.lv_selection_bg_dir)
 
@@ -81,8 +80,10 @@ class Session:
         self.collectible_dir = paths.ASSETS_PATH / "items" / "collectibles"
         self.collectibles: Dict[str, Surface] = {}
         for c in types.Collectibles:
-            self.collectibles[c.name] = utils.load_img(self.collectible_dir / f"{c.name.lower()}.png")
-        
+            self.collectibles[c.name] = utils.load_img(
+                self.collectible_dir / f"{c.name.lower()}.png"
+            )
+
     def load_or_create_savefile(self):
         import json
         from common import paths

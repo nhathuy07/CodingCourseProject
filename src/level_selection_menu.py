@@ -15,7 +15,7 @@ from session import Session
 
 class LvSelection:
     def __init__(self) -> None:
-        self.prompt_font = pg_font.Font(config.FONT[0], int(config.FONT[1] * 1.5))
+        self.prompt_font = pg_font.Font(config.FONT2[0], int(config.FONT2[1] * 1.5))
         self.prompt = self.prompt_font.render(
             "Which item do you want to collect?", True, (99, 61, 17), None
         )

@@ -1,14 +1,5 @@
-from enum import Enum
+from enum import Enum, auto
 from pygame import USEREVENT
-
-
-class GameSection(Enum):
-    INTRO = -1
-    MAIN_MENU = 0
-    LEVEL_1 = 1
-    LEVEL_2 = 2
-    LEVEL_3 = 3
-    LEVEL_4 = 4
 
 
 class Items(Enum):
@@ -32,9 +23,43 @@ class MenuOption(Enum):
     ABOUT = 2
     HELP = 3
 
+
 class Collectibles(Enum):
     GREEN = -1
     GREY = -2
     PURPLE = -3
     YELLOW = -4
     ENERGY_BAR = -5
+
+class Ground(Enum):
+    Base = -1
+    NoFace = 0
+    RightFace = 1
+    LeftFace = 2
+    UpFace = 3
+    RightUpFace = 4
+    LeftUpFace = 5
+    DownFace = 6
+    RightDownFace = 7
+    LeftDownFace = 8
+    FacingTopBottom = 9
+    FacingTopRightBottom = 10
+    FacingTopLeftBottom = 11
+    FacingLeftRight = 12
+    FacingTopLeftRight = 13
+    FacingBottomLeftRight = 14
+    FacingAll = 15
+
+class Scheme(Enum):
+    BlueCave = 0
+    LavaCave = 1
+    DarkCave = 2
+
+class Mobs(Enum):
+    LvOne = 20
+    LvTwo = 21
+    LvThree = 22
+
+class Projectiles(Enum):
+    EnemyBullet = 30
+    Dripstone = 31
