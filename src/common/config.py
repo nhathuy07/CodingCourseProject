@@ -14,7 +14,7 @@ def get_window_size(display_scaling=DISPLAY_SCALING):
     return WINDOW_SIZE[0] * display_scaling, WINDOW_SIZE[1] * display_scaling
 
 
-FONT = (str(DATA_PATH / "fonts" / "Roboto-Bold.ttf"), int(32 * DISPLAY_SCALING))
+FONT = (str(DATA_PATH / "fonts" / "Inter-Bold.ttf"), int(32 * DISPLAY_SCALING))
 
 CLICK_PROMPT = image.load(
     str(ASSETS_PATH / "icons" / "click-tap-svgrepo-com.png")

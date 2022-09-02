@@ -1,4 +1,6 @@
-from pygame import event, USEREVENT
+from pygame import event, USEREVENT, QUIT, MOUSEBUTTONDOWN
+
+from common.types import Levels, Items
 
 ABOUT = USEREVENT + 1
 MAIN_MENU = USEREVENT + 2
@@ -11,3 +13,17 @@ GO_TO_LV_SELECTION = USEREVENT + 8
 INTRODUCTION_DIALOGUE = USEREVENT + 9
 NEXT_DLG_LINE = USEREVENT + 10
 PRELOAD_SCREEN = USEREVENT + 11
+
+# load event codes
+commonEvents = (
+    PLAY,
+    RESUME,
+    ABOUT,
+    MOUSEBUTTONDOWN,
+    QUIT,
+    INTRODUCTION_DIALOGUE,
+    GO_TO_LV_SELECTION,
+    PRELOAD_SCREEN,
+)
+preloaderCode = (x.value for x in Items)
+levelCode = (x.value for x in Levels)
