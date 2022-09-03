@@ -1,4 +1,4 @@
-from common.types import Items, Levels
+from common.types import Items, Levels, Scheme
 from preload_scr import PreLoadScr
 from session import Session
 from mainMenu import MainMenu
@@ -7,6 +7,7 @@ from dialogue_handler import Dialogue
 from level_selection_menu import LvSelection
 import pygame
 from common import config, events
+from world import World
 
 # load event codes
 commonEvents = (
@@ -20,7 +21,7 @@ commonEvents = (
     events.PRELOAD_SCREEN,
 )
 preloaderCode = [x.value for x in Items]
-levelCode = [x.value for x in Items]
+levelCode = [x.value for x in Levels]
 
 
 if __name__ == "__main__":
@@ -41,6 +42,8 @@ if __name__ == "__main__":
             current_screen.update(session, display)
         elif type(current_screen).__name__ == "PreLoadScr":
             current_screen.update(session, display)
+        elif type(current_screen).__name__ == "World":
+            current_screen.update(display)
 
         for e in pygame.event.get(
             eventtype=(*commonEvents, *levelCode, *preloaderCode)
@@ -99,6 +102,8 @@ if __name__ == "__main__":
                 pygame.event.set_allowed(
                     (pygame.QUIT, pygame.MOUSEBUTTONDOWN, *levelCode)
                 )
+            elif e.type in levelCode:
+                current_screen = World(session, Levels(e.type))
             elif e.type == pygame.QUIT:
                 quit()
 

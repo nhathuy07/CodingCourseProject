@@ -32,7 +32,7 @@ class Collectibles(Enum):
     ENERGY_BAR = -5
 
 class Ground(Enum):
-    Base = -1
+    #Base = -1
     NoFace = 0
     RightFace = 1
     LeftFace = 2

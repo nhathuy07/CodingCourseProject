@@ -3,7 +3,7 @@ from pygame import font as pg_font
 from pygame import mouse as pg_mouse
 from pygame import display as pg_disp
 from pygame import MOUSEBUTTONDOWN, QUIT
-from common.types import Items
+from common.types import Items, Levels
 from session import Session
 from common import config, events
 from ctypes import windll

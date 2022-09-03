@@ -1,7 +1,7 @@
 from typing import Optional, Dict
 from common import types
 from common.config import DISPLAY_SCALING
-from common.types import Items
+from common.types import Ground, Items, Scheme
 import os
 from pygame import rect, Surface
 
@@ -84,6 +84,15 @@ class Session:
                 self.collectible_dir / f"{c.name.lower()}.png"
             )
 
+        self.ground_texture_dir = paths.ASSETS_PATH / "ground"
+        self.ground_texture = {}
+        for s in Scheme:
+            self.ground_texture[s.value] = {}
+            for variation in Ground._member_names_:
+                self.ground_texture[s.value][variation] = utils.load_img(self.ground_texture_dir / str(s.value) / f"{variation.lower()}.png")
+                
+        self.level_bg_dir = paths.ASSETS_PATH / "background" / "levels"
+        self.background = tuple(map(utils.load_img, Path(self.level_bg_dir).glob("*.png")))
     def load_or_create_savefile(self):
         import json
         from common import paths
