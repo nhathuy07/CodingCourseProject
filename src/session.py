@@ -1,7 +1,8 @@
+import csv
 from typing import Optional, Dict
 from common import types
 from common.config import DISPLAY_SCALING
-from common.types import Ground, Items, Scheme
+from common.types import Ground, Items, Levels, Scheme
 import os
 from pygame import rect, Surface
 
@@ -65,9 +66,17 @@ class Session:
             map(utils.load_img, Path(self.dialogue_scenes_path).glob("*.png"))
         )
 
+        self.map_path = paths.DATA_PATH / "levels"
         self.level_data_dir = paths.DATA_PATH / "level_data.json"
         with open(self.level_data_dir, "r") as levelDataFileIOWrapper:
             self.level_data = json.load(levelDataFileIOWrapper)
+        for key in self.level_data:
+            level_path = self.map_path / f"{str(key)}.csv"
+            if level_path.exists():
+                with open(str(level_path)) as o:
+                    csvreader = csv.reader(o)
+                    self.level_data[key]["MapData"] = tuple(csvreader)
+
 
         self.lv_selection_bg = utils.load_img(self.lv_selection_bg_dir)
 
@@ -93,6 +102,8 @@ class Session:
                 
         self.level_bg_dir = paths.ASSETS_PATH / "background" / "levels"
         self.background = tuple(map(utils.load_img, Path(self.level_bg_dir).glob("*.png")))
+
+
     def load_or_create_savefile(self):
         import json
         from common import paths

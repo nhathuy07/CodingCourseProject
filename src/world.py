@@ -9,14 +9,8 @@ class World:
     def __init__(self, session: Session, level: Levels) -> None:
         self.level = level
         self.scheme = Scheme[session.level_data[self.level.name]["Scheme"]]
-        self.entities_map = [
-            [1, 1, 1, 1, 0, 0],
-            [1, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 1, 0],
-            [1, 1, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1]
-        ]
-        self.goal = {}
+        self.entities_map = session.level_data[self.level.name]["MapData"]
+        self.goal = session.level_data[self.level.name]["Items"]
         self.collected = {}
         self.entities = []
         self.load_terrain(session)
@@ -26,14 +20,14 @@ class World:
     def load_terrain(self, session: Session):
         for i in range(len(self.entities_map)):
             for j in range(len(self.entities_map[i])):
-                if self.entities_map[i][j] == 1:
-                    position = (floor(j * 59 * DISPLAY_SCALING), floor(i * 59 * DISPLAY_SCALING))
+                if int(self.entities_map[i][j]) == 1:
+                    position = (j * 60 * DISPLAY_SCALING, i * 60 * DISPLAY_SCALING)
 
                     # check if faces are NOT covered
-                    top_face = i > 0 and self.entities_map[i - 1][j] != 1
-                    right_face = j < (len(self.entities_map[i]) - 1) and self.entities_map[i][j + 1] != 1
-                    left_face = j > 0 and self.entities_map[i][j - 1] != 1
-                    bottom_face = i < len(self.entities_map) - 1 and self.entities_map[i + 1][j] != 1
+                    top_face = i > 0 and self.entities_map[i - 1][j] != "1"
+                    right_face = j < (len(self.entities_map[i]) - 1) and self.entities_map[i][j + 1] != "1"
+                    left_face = j > 0 and self.entities_map[i][j - 1] != "1"
+                    bottom_face = i < len(self.entities_map) - 1 and self.entities_map[i + 1][j] != "1"
 
                     # No face
                     if not top_face and not right_face and not left_face and not bottom_face:

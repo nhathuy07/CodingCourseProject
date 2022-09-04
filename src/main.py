@@ -26,7 +26,7 @@ levelCode = [x.value for x in Levels]
 
 if __name__ == "__main__":
     session = Session()
-    display = pygame.display.set_mode(config.get_window_size())
+    display = pygame.display.set_mode(config.get_window_size(), pygame.HWACCEL)
     clock = pygame.time.Clock()
     current_screen = MainMenu(session, display)
     while True:

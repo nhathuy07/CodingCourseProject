@@ -25,11 +25,11 @@ class MenuOption(Enum):
 
 
 class Collectibles(Enum):
-    GREEN = -1
-    GREY = -2
-    PURPLE = -3
-    YELLOW = -4
-    ENERGY_BAR = -5
+    GREEN = 10
+    GREY = 11
+    PURPLE = 12
+    YELLOW = 13
+    ENERGY_BAR = 14
 
 class Ground(Enum):
     #Base = -1
