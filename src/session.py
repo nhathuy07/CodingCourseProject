@@ -1,10 +1,12 @@
 import csv
 from typing import Optional, Dict
 from common import types
-from common.config import DISPLAY_SCALING
-from common.types import Ground, Items, Levels, Scheme
+from common.config import DISPLAY_SCALING, FONT
+from common.types import Ground, Items, Levels, PlayerState, Scheme
 import os
 from pygame import rect, Surface
+
+from common.utils import load_img
 
 
 class Session:
@@ -12,10 +14,11 @@ class Session:
         import json
         from common import paths, utils
         from pathlib import Path
-        from pygame import display, transform
+        from pygame import display, transform, font
 
         display.init()
         display.set_mode()
+        
         self.section = None
         self.world = None
         self.playerData = {
@@ -99,10 +102,18 @@ class Session:
             self.ground_texture[s.value] = {}
             for variation in Ground._member_names_:
                 self.ground_texture[s.value][variation] = utils.load_img(self.ground_texture_dir / str(s.value) / f"{variation.lower()}.png")
+
+        self.liquid_texture_dir = paths.ASSETS_PATH / "liquid"
+        self.liquid_texture = {}
+        for l in self.liquid_texture_dir.glob("*.png"):
+            self.liquid_texture[l.name.removesuffix(".png")] = load_img(l)
                 
         self.level_bg_dir = paths.ASSETS_PATH / "background" / "levels"
         self.background = tuple(map(utils.load_img, Path(self.level_bg_dir).glob("*.png")))
 
+        self.player_sprite = {}
+        for sprite in PlayerState:
+            self.player_sprite[sprite.name] = load_img(self.character_sprite_dir / "Mark" / f"{sprite.name}.png")
 
     def load_or_create_savefile(self):
         import json

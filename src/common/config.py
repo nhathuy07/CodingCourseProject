@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from dis import dis
 from pygame import image, transform, Rect, display
 from common.paths import ASSETS_PATH, DATA_PATH
@@ -6,7 +7,7 @@ display.init()
 display.set_mode()
 
 WINDOW_SIZE = (1558, 961)
-DISPLAY_SCALING = 0.7
+DISPLAY_SCALING = 0.8
 TRANSISTION_SPEED = 10
 
 
@@ -30,3 +31,11 @@ ITEM_PANE = transform.smoothscale(
 )
 
 DIALOG_DISP_AREA = Rect(20, 850 * DISPLAY_SCALING, get_window_size()[0] - 180, 100 - 20)
+
+@dataclass
+class PlayerConfig():
+    InitX = 80
+    InitY = 80
+    MovingSpd = 4
+    JumpingSpd = 10
+    Gravity = 1

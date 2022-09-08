@@ -1,9 +1,12 @@
+
 from math import floor
 from common import types
-from common.config import DISPLAY_SCALING
-from common.types import Items, Levels, Scheme
+from common.config import DISPLAY_SCALING, FONT
+from common.types import Items, Levels, Liquid, Scheme
 from session import Session
 from entities.ground import Ground
+from entities import liquid, player
+from pygame import font
 
 class World:
     def __init__(self, session: Session, level: Levels) -> None:
@@ -13,8 +16,11 @@ class World:
         self.goal = session.level_data[self.level.name]["Items"]
         self.collected = {}
         self.entities = []
-        self.load_terrain(session)
+        self.player = player.Player(session)
         self.load_bg(session)
+        self.load_terrain(session)
+        self.font = font.Font(FONT[0], 16)
+        self.load_liquid(session)
     def load_bg(self, session: Session):
         self.bg = session.background[self.scheme.value]
     def load_terrain(self, session: Session):
@@ -72,8 +78,22 @@ class World:
                         ground_type = types.Ground.FacingAll
                     self.entities.append(Ground(session, ground_type, self.scheme, position[0], position[1]))
 
-    def update(self, display):
+    def load_liquid(self, session: Session):
+        for i in range(len(self.entities_map)):
+            for j in range(len(self.entities_map[i])):
+                if int(self.entities_map[i][j]) in [v.value for v in Liquid]:
+                    pos = (j * 60 * DISPLAY_SCALING, i * 60 * DISPLAY_SCALING)
+                    entityNo = int(self.entities_map[i][j])
+                    self.entities.append(liquid.Liquid(session, pos[0], pos[1], Liquid(entityNo)))
+
+    def update(self, display, fps):
         display.fill((0, 0, 0))
         display.blit(self.bg, (0, 0))
         for e in self.entities:
-            display.blit(e.image, (e.x, e.y))
+            display.blit(e.image, e.rect.topleft)
+        self.player.update(display, self.get_terrain())
+        f = self.font.render(str(fps), True, (255, 255, 255))
+        display.blit(f, (10, 10))
+    
+    def get_terrain(self):
+        return [x for x in self.entities if type(x).__name__ == "Ground"]

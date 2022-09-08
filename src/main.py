@@ -43,7 +43,7 @@ if __name__ == "__main__":
         elif type(current_screen).__name__ == "PreLoadScr":
             current_screen.update(session, display)
         elif type(current_screen).__name__ == "World":
-            current_screen.update(display)
+            current_screen.update(display, clock.get_fps())
 
         for e in pygame.event.get(
             eventtype=(*commonEvents, *levelCode, *preloaderCode)
@@ -108,4 +108,4 @@ if __name__ == "__main__":
                 quit()
 
         pygame.display.flip()
-        clock.tick(120)
+        clock.tick(60)

@@ -21,11 +21,6 @@ def image_scale(surface: surface.Surface, scale: float):
 
 
 def drawText(surface, text, color, rect, font, aa=True, bkg=None):
-    """Simple Text Wrapper.
-    Learn more at https://www.pygame.org/wiki/TextWrap#:~:text=Simple%20Text%20Wrapping%20for%20pygame.&text=Simple%20function%20that%20will%20draw,make%20the%20line%20closer%20together."""
-    # draw some text into an area of a surface
-    # automatically wraps words
-    # returns any text that didn't get blitted
     rect = Rect(rect)
     y = rect.top
     lineSpacing = -2
@@ -44,8 +39,8 @@ def drawText(surface, text, color, rect, font, aa=True, bkg=None):
         while font.size(text[:i])[0] < rect.width and i < len(text):
             i += 1
 
-        # if we've wrapped the text, then adjust the wrap to the last word
-        if i > len(text):
+        # if we've wrapped the text, then adjust the wrap to the last word      
+        if i < len(text): 
             i = text.rfind(" ", 0, i) + 1
 
         # render the line and blit it to the surface
