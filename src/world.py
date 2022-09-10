@@ -1,13 +1,15 @@
 from math import floor
 from common import types
 from common.config import DISPLAY_SCALING, FONT
-from common.events import ITEM_COLLECTED
+from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED
 from common.types import Collectibles, Items, Levels, Liquid, Scheme
 from inventoryPane import InventoryPane
 from session import Session
 from entities.ground import Ground
 from entities import collectible, liquid, player
 from pygame import font, event, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, KEYDOWN, KEYUP
+
+from trail_fx import TrailFx
 
 class World:
     def __init__(self, session: Session, level: Levels) -> None:
@@ -16,6 +18,7 @@ class World:
         self.entities_map = session.level_data[self.level.name]["MapData"]
         self.goal = session.level_data[self.level.name]["Items"]
         self.entities = []
+        self.effects = []
         self.player = player.Player(session)
         self.load_bg(session)
         self.load_entities(session)
@@ -141,8 +144,17 @@ class World:
         display.blit(self.bg, (0, 0))
         for e in self.entities:
             e.render(display)
+
+        for e in event.get(EMIT_TRAIL_PARTICLE):
+            if e.type == EMIT_TRAIL_PARTICLE:
+                self.effects.append(TrailFx(self.player.rect.x + self.player.particle_relative_position[0], self.player.rect.y + self.player.particle_relative_position[1], session, self.player.dx))
+        
+        for e in self.effects:
+            e.render(display)
+            if e.alpha <= 0:
+                self.effects.remove(e)
         self.player.update(display, self.entities)
-        f = self.font.render(f"{self.player.dy}", True, (255, 255, 255))
+        f = self.font.render(f"{self.player.dx}", True, (255, 255, 255))
         display.blit(f, (10, 10))
         
         self.inventory_pane.render(session, display, self.player.inventory)

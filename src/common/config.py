@@ -30,3 +30,4 @@ class PlayerConfig:
     JumpingSpd = 22
     Gravity = 0.75
     Acceleration = 0.7
+    Deceleration = 0.55

@@ -145,6 +145,9 @@ class Session:
         self.ITEM_PANE = load_img(ASSETS_PATH / "icons" / "itemPane.png")
         self.INVENTORY_PANE = load_img(ASSETS_PATH / "icons" / "inventoryPane.png")
         self.INVENTORY_PANE_2 = load_img(ASSETS_PATH / "icons" / "inventoryPane2.png")
+        
+        # Propelling effect
+        self.TRAIL_PARTICLE_FX = load_img(ASSETS_PATH / "fx" /"trail.png")
     def load_or_create_savefile(self):
         import json
 

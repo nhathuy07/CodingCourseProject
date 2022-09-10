@@ -1,7 +1,8 @@
 from math import ceil, floor
+from time import time
 from typing import Any, List
 from common.config import DISPLAY_SCALING, PlayerConfig
-from common.events import ITEM_COLLECTED
+from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED
 from common.types import Ground, PlayerState
 from entities.collectible import Collectible
 from session import Session
@@ -17,7 +18,8 @@ class Player:
         movingSpd=PlayerConfig.MovingSpd,
         jumpingSpd=PlayerConfig.JumpingSpd,
         gravity=PlayerConfig.Gravity,
-        acceleration=PlayerConfig.Acceleration
+        acceleration=PlayerConfig.Acceleration,
+        deceleration = PlayerConfig.Deceleration
     ) -> None:
         # init position
         self.x = x
@@ -35,7 +37,7 @@ class Player:
         self.y_offset = 0
         self.floating_effect_direction = "up"
         self.acceleration = acceleration
-
+        self.deceleration = deceleration
         # default speed values
         self.moving_speed = movingSpd
         self.jumping_speed = jumpingSpd
@@ -50,6 +52,12 @@ class Player:
         # set flip
         self.image_flipped = False
         self.clear_event()
+
+        # particle settings
+        self.last_particle_spawn_time = 0
+        self.particle_interval = 0.04
+        self.particle_relative_position = [48 * 0.7, 135 * 0.7]
+
     def clear_event(self):
         # clear events to prevent undesirable behaviors caused by clicking A/D or Left/Right on preload screen
         event.clear()
@@ -118,6 +126,10 @@ class Player:
         else:
             self.y_offset += 0.2
 
+    def particle_effect(self):
+        if time() - self.last_particle_spawn_time > self.particle_interval * PlayerConfig.MovingSpd / abs(self.dx):
+            event.post(event.Event(EMIT_TRAIL_PARTICLE))
+            self.last_particle_spawn_time = time()
 
     def update(self, display: Surface, entities):
         
@@ -158,7 +170,12 @@ class Player:
                 self.dx = self.moving_speed
         
         else:
-            self.dx = 0
+            if self.dx < 0 and self.image_flipped:
+                self.dx += self.deceleration
+            elif self.dx > 0 and not self.image_flipped:
+                    self.dx -= self.deceleration
+            else:
+                self.dx = 0
         
         self.update_speed_based_on_collision([x for x in entities if type(x).__name__ == "Ground"])
 
@@ -170,8 +187,12 @@ class Player:
 
         if self.state == PlayerState.Idle:
             self.floating_effect()
+            self.last_particle_spawn_time = 0
+        elif self.state == PlayerState.Moving:
+            self.particle_effect()
         
         self.collect_item(entities)
+        self.particle_relative_position = [27, self.rect.height - 15 + self.y_offset]
         display.blit(
             transform.flip(self.sprites[self.state.name], True, False) if self.image_flipped else self.sprites[self.state.name],
             (self.rect.x - self.rect.width if self.image_flipped else self.rect.x, int(self.rect.y + self.y_offset))
