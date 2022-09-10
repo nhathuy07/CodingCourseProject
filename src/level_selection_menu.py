@@ -33,7 +33,7 @@ class LvSelection:
             display.blit(session.lv_selection_bg, (0, 0))
 
             display.blit(
-                config.ITEM_PANE,
+                session.ITEM_PANE,
                 (351.45 * config.DISPLAY_SCALING, 764.2 * config.DISPLAY_SCALING),
             )
             display.blit(

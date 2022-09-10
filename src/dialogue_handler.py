@@ -73,6 +73,7 @@ class Dialogue:
                         config.DIALOG_DISP_AREA.top - self.speakerName.get_height(),
                     ),
                 )
+                
                 utils.drawText(
                     display,
                     section_data["line"],
@@ -85,7 +86,7 @@ class Dialogue:
                     ),
                     pygame.font.Font(config.FONT[0], config.FONT[1]),
                 )
-
+                display.blit(session.CLICK_PROMPT, (config.get_window_size()[0] - session.CLICK_PROMPT.get_width() - 20, 20))
         elif self.section < self.range[1]:
             self.set_section(self.section + 1)
 

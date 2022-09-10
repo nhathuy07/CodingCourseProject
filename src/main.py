@@ -35,7 +35,7 @@ if __name__ == "__main__":
             pygame.event.set_allowed(commonEvents)
             current_screen.update([e for e in pygame.event.get()])
         elif type(current_screen).__name__ == "Intro":
-            current_screen.update(display)
+            current_screen.update(display, session)
         elif type(current_screen).__name__ == "Dialogue":
             current_screen.update(display, session)
         elif type(current_screen).__name__ == "LvSelection":
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         elif type(current_screen).__name__ == "PreLoadScr":
             current_screen.update(session, display)
         elif type(current_screen).__name__ == "World":
-            current_screen.update(display, clock.get_fps())
+            current_screen.update(session, display, clock.get_fps())
 
         for e in pygame.event.get(
             eventtype=(*commonEvents, *levelCode, *preloaderCode)

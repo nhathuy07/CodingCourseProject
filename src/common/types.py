@@ -31,8 +31,9 @@ class Collectibles(Enum):
     YELLOW = 13
     ENERGY_BAR = 14
 
+
 class Ground(Enum):
-    #Base = -1
+    # Base = -1
     NoFace = 0
     RightFace = 1
     LeftFace = 2
@@ -50,22 +51,27 @@ class Ground(Enum):
     FacingBottomLeftRight = 14
     FacingAll = 15
 
+
 class Scheme(Enum):
     BlueCave = 0
     LavaCave = 1
     DarkCave = 2
+
 
 class Mobs(Enum):
     LvOne = 20
     LvTwo = 21
     LvThree = 22
 
+
 class Projectiles(Enum):
     EnemyBullet = 30
     Dripstone = 31
 
+
 class Liquid(Enum):
     Acid = 40
+
 
 # States
 class PlayerState(Enum):

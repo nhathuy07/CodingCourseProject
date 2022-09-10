@@ -39,8 +39,8 @@ def drawText(surface, text, color, rect, font, aa=True, bkg=None):
         while font.size(text[:i])[0] < rect.width and i < len(text):
             i += 1
 
-        # if we've wrapped the text, then adjust the wrap to the last word      
-        if i < len(text): 
+        # if we've wrapped the text, then adjust the wrap to the last word
+        if i < len(text):
             i = text.rfind(" ", 0, i) + 1
 
         # render the line and blit it to the surface

@@ -1,2 +1,5 @@
 .venv/*
 data/player_savefile.json
+src/__pycache__
+src/common/__pycache__
+src/entities/__pycache__

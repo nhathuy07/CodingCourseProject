@@ -1,8 +1,9 @@
 import json, pygame
 from common import events
-from common.config import CLICK_PROMPT, DISPLAY_SCALING, get_window_size
+from common.config import DISPLAY_SCALING, get_window_size
 
 from common.utils import drawText
+from session import Session
 
 
 class Intro:
@@ -35,7 +36,7 @@ class Intro:
         else:
             pygame.event.post(pygame.event.Event(PLAY))
 
-    def update(self, display: pygame.surface.Surface):
+    def update(self, display: pygame.surface.Surface, session: Session):
         from common import config
 
         if self.current_page < self.page_count - 1:
@@ -53,7 +54,7 @@ class Intro:
             current_scene.set_alpha(self.alpha)
             display.blit(current_scene, (0, 0))
             display.blit(
-                CLICK_PROMPT, (get_window_size()[0] - CLICK_PROMPT.get_width() - 20, 20)
+                session.CLICK_PROMPT, (get_window_size()[0] - session.CLICK_PROMPT.get_width() - 20, 20)
             )
 
             # draw text

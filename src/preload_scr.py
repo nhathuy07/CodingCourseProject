@@ -1,5 +1,11 @@
 from common import types
-from common.config import DISPLAY_SCALING, FONT, FONT2, TRANSISTION_SPEED, get_window_size
+from common.config import (
+    DISPLAY_SCALING,
+    FONT,
+    FONT2,
+    TRANSISTION_SPEED,
+    get_window_size,
+)
 from session import Session
 from pygame import event as pg_event, font as pg_font, draw as pg_draw, rect as pg_rect
 
@@ -34,11 +40,11 @@ class PreLoadScr:
             )
             for key in session.level_data[self.objective.name]["Items"]:
                 display.blit(
-                    session.collectibles[key.upper()],
+                    session.collectibles[key.upper()]["Full"],
                     (
                         (
                             (self.frame_size[0] / self.items_count)
-                            - session.collectibles[key.upper()].get_width()
+                            - session.collectibles[key.upper()]["Full"].get_width()
                         )
                         / 2
                         + (self.frame_size[0] / self.items_count * self.step)
@@ -49,16 +55,14 @@ class PreLoadScr:
                         280 * DISPLAY_SCALING,
                     ),
                 )
-                required_items_count = session.level_data[self.objective.name]["Items"][
-                    key
-                ]
+                required_items_count = session.level_data[self.objective.name]["Items"][key]
                 disp = self.FONT2.render(str(required_items_count), True, (0, 104, 170))
                 disp_rect = disp.get_rect()
 
                 disp_rect.topleft = (
                     (
                         (self.frame_size[0] / self.items_count)
-                        - session.collectibles[key.upper()].get_width()
+                        - session.collectibles[key.upper()]["Full"].get_width()
                     )
                     / 2
                     + (self.frame_size[0] / self.items_count * self.step)
@@ -74,7 +78,7 @@ class PreLoadScr:
                     pg_rect.Rect(
                         disp_rect.x + 30,
                         disp_rect.y,
-                        session.collectibles[key.upper()].get_width() - 60,
+                        session.collectibles[key.upper()]["Full"].get_width() - 60,
                         disp_rect.height,
                     ),
                     0,

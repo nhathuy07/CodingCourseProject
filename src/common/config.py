@@ -17,25 +17,16 @@ def get_window_size(display_scaling=DISPLAY_SCALING):
 
 FONT = (str(DATA_PATH / "fonts" / "Roboto-Bold.ttf"), int(32 * DISPLAY_SCALING))
 FONT2 = (str(DATA_PATH / "fonts" / "Inter-Bold.ttf"), int(32 * DISPLAY_SCALING))
-CLICK_PROMPT = image.load(
-    str(ASSETS_PATH / "icons" / "click-tap-svgrepo-com.png")
-).convert_alpha()
-CLICK_PROMPT = transform.smoothscale(
-    CLICK_PROMPT, (CLICK_PROMPT.get_width() * 1.3, CLICK_PROMPT.get_height() * 1.3)
-)
 
-ITEM_PANE = image.load(str(ASSETS_PATH / "icons" / "itemPane.png"))
-ITEM_PANE = transform.smoothscale(
-    ITEM_PANE,
-    (ITEM_PANE.get_width() * DISPLAY_SCALING, ITEM_PANE.get_height() * DISPLAY_SCALING),
-)
 
 DIALOG_DISP_AREA = Rect(20, 850 * DISPLAY_SCALING, get_window_size()[0] - 180, 100 - 20)
 
+
 @dataclass
-class PlayerConfig():
+class PlayerConfig:
     InitX = 80
     InitY = 80
-    MovingSpd = 4
-    JumpingSpd = 10
-    Gravity = 1
+    MovingSpd = 10
+    JumpingSpd = 22
+    Gravity = 0.75
+    Acceleration = 0.7

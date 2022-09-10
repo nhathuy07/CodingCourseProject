@@ -2,31 +2,31 @@
     "SHELL": {
         "Scheme": "BlueCave",
         "Items": {
-            "Grey": 7,
-            "Yellow": 4
+            "GREY": 7,
+            "YELLOW": 4
         }
     },
     "THRUSTER": {
         "Scheme": "BlueCave",
         "Items": {
-            "Grey": 6,
-            "Yellow": 4,
-            "Green": 3
+            "GREY": 6,
+            "YELLOW": 4,
+            "GREEN": 3
         }
     },
     "COMM_SYSTEM": {
         "Scheme": "LavaCave",
         "Items": {
-            "Grey": 4,
-            "Yellow": 4,
-            "Green": 5,
-            "Purple": 3
+            "GREY": 4,
+            "YELLOW": 4,
+            "GREEN": 5,
+            "PURPLE": 3
         }
     },
     "ENERGY_CORE": {
         "Scheme": "DarkCave",
         "Items": {
-            "Energy_Bar": 8
+            "ENERGY_BAR": 8
         }
     }
 }

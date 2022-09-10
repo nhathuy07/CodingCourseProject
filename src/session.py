@@ -1,24 +1,28 @@
 import csv
-from typing import Optional, Dict
-from common import types
-from common.config import DISPLAY_SCALING, FONT
-from common.types import Ground, Items, Levels, PlayerState, Scheme
 import os
-from pygame import rect, Surface
+from typing import Dict
 
+from pygame import Surface, rect
+
+from common import types
+from common.config import DISPLAY_SCALING
+from common.paths import ASSETS_PATH
+from common.types import Ground, Items, PlayerState, Scheme
 from common.utils import load_img
 
 
 class Session:
     def __init__(self):
         import json
-        from common import paths, utils
         from pathlib import Path
-        from pygame import display, transform, font
+
+        from pygame import display, font, transform
+
+        from common import paths, utils
 
         display.init()
         display.set_mode()
-        
+
         self.section = None
         self.world = None
         self.playerData = {
@@ -80,7 +84,6 @@ class Session:
                     csvreader = csv.reader(o)
                     self.level_data[key]["MapData"] = tuple(csvreader)
 
-
         self.lv_selection_bg = utils.load_img(self.lv_selection_bg_dir)
 
         self.preloader_bg_dir = paths.ASSETS_PATH / "background" / "LevelLoading.png"
@@ -90,33 +93,61 @@ class Session:
         self.preloader_frame = utils.load_img(self.preloader_frame_dir)
 
         self.collectible_dir = paths.ASSETS_PATH / "items" / "collectibles"
-        self.collectibles: Dict[str, Surface] = {}
+        self.collectibles: Dict[str, Dict[str, Surface]] = {}
         for c in types.Collectibles:
-            self.collectibles[c.name] = utils.load_img(
-                self.collectible_dir / f"{c.name.lower()}.png"
+            self.collectibles[c.name] = {}
+            self.collectibles[c.name]["Base"] = utils.load_img(
+                self.collectible_dir / c.name.lower() / "Base.png"
             )
+            if (self.collectible_dir / c.name.lower() / "GlowFx.png").exists():
+                self.collectibles[c.name]["GlowFx"] = utils.load_img(
+                    self.collectible_dir / c.name.lower() / "GlowFx.png"
+                )
+            else:
+                self.collectibles[c.name]["GlowFx"] = None
+            
+            if (self.collectible_dir / c.name.lower() / "Full.png").exists():
+                self.collectibles[c.name]["Full"] = utils.load_img(
+                    self.collectible_dir / c.name.lower() / "Full.png"
+                )
+            else:
+                self.collectibles[c.name]["Full"] = None
+            
 
         self.ground_texture_dir = paths.ASSETS_PATH / "ground"
         self.ground_texture = {}
         for s in Scheme:
             self.ground_texture[s.value] = {}
             for variation in Ground._member_names_:
-                self.ground_texture[s.value][variation] = utils.load_img(self.ground_texture_dir / str(s.value) / f"{variation.lower()}.png")
+                self.ground_texture[s.value][variation] = utils.load_img(
+                    self.ground_texture_dir / str(s.value) / f"{variation.lower()}.png"
+                )
 
         self.liquid_texture_dir = paths.ASSETS_PATH / "liquid"
         self.liquid_texture = {}
         for l in self.liquid_texture_dir.glob("*.png"):
             self.liquid_texture[l.name.removesuffix(".png")] = load_img(l)
-                
+
         self.level_bg_dir = paths.ASSETS_PATH / "background" / "levels"
-        self.background = tuple(map(utils.load_img, Path(self.level_bg_dir).glob("*.png")))
+        self.background = tuple(
+            map(utils.load_img, Path(self.level_bg_dir).glob("*.png"))
+        )
 
         self.player_sprite = {}
         for sprite in PlayerState:
-            self.player_sprite[sprite.name] = load_img(self.character_sprite_dir / "Mark" / f"{sprite.name}.png")
+            self.player_sprite[sprite.name] = load_img(
+                self.character_sprite_dir / "Mark" / f"{sprite.name}.png",
+                0.7
+            )
 
+        # UI elements
+        self.CLICK_PROMPT = load_img(ASSETS_PATH / "icons" / "click-tap-svgrepo-com.png", 1.3)
+        self.ITEM_PANE = load_img(ASSETS_PATH / "icons" / "itemPane.png")
+        self.INVENTORY_PANE = load_img(ASSETS_PATH / "icons" / "inventoryPane.png")
+        self.INVENTORY_PANE_2 = load_img(ASSETS_PATH / "icons" / "inventoryPane2.png")
     def load_or_create_savefile(self):
         import json
+
         from common import paths
 
         self.userSavefilePath = paths.DATA_PATH / "player_savefile.json"
@@ -132,6 +163,7 @@ class Session:
 
     def update_savefile(self):
         import json
+
         from common import paths
 
         self.userSavefilePath = paths.DATA_PATH / "player_savefile.json"
@@ -140,6 +172,7 @@ class Session:
 
     def override_savefile(self):
         import json
+
         from common import paths
 
         self.userSavefilePath = paths.DATA_PATH / "player_savefile.json"
