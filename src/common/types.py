@@ -65,8 +65,9 @@ class Mobs(Enum):
 
 
 class Projectiles(Enum):
-    EnemyBullet = 30
+    # EnemyBullet = 30
     Dripstone = 31
+    PlayerBullet = 32
 
 
 class Liquid(Enum):
@@ -79,3 +80,4 @@ class PlayerState(Enum):
     Idle = 101
     Moving = 102
     Shooting = 103
+    AttackedWhileMoving = 104

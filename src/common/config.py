@@ -8,7 +8,7 @@ display.set_mode()
 
 WINDOW_SIZE = (1558, 961)
 DISPLAY_SCALING = 0.8
-TRANSISTION_SPEED = 10
+TRANSISTION_SPEED = 18
 
 
 def get_window_size(display_scaling=DISPLAY_SCALING):
@@ -31,3 +31,10 @@ class PlayerConfig:
     Gravity = 0.75
     Acceleration = 0.7
     Deceleration = 0.55
+    HP = 100
+
+@dataclass
+class BulletConfig:
+    Dx = 35
+    Gravity = 0.2
+    Damage = 20

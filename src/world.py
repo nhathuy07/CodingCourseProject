@@ -1,8 +1,9 @@
 from math import floor
 from common import types
-from common.config import DISPLAY_SCALING, FONT
+from common.config import DISPLAY_SCALING, FONT, get_window_size
 from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED
 from common.types import Collectibles, Items, Levels, Liquid, Scheme
+from hpPane import HPPane
 from inventoryPane import InventoryPane
 from session import Session
 from entities.ground import Ground
@@ -25,7 +26,7 @@ class World:
         self.load_terrain(session)
         self.font = font.Font(FONT[0], 16)
         self.inventory_pane = InventoryPane(session, self.player.inventory)
-        
+        self.hp_pane = HPPane(get_window_size()[0] - 10 - session.HP_PANE.get_width(), self.inventory_pane.rect.y, session, self.player)
 
         event.set_allowed((KEYUP, KEYDOWN, MOUSEBUTTONDOWN, ITEM_COLLECTED))
 
@@ -153,8 +154,12 @@ class World:
             e.render(display)
             if e.alpha <= 0:
                 self.effects.remove(e)
-        self.player.update(display, self.entities)
+        self.player.update(display, self.entities, session)
         f = self.font.render(f"{self.player.dx}", True, (255, 255, 255))
         display.blit(f, (10, 10))
         
         self.inventory_pane.render(session, display, self.player.inventory)
+        self.hp_pane.render(self.player, display)
+    
+
+        

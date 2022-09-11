@@ -4,7 +4,7 @@ from common.types import MenuOption
 from common import events
 from common.config import get_window_size
 from session import Session
-
+from pygame import QUIT
 pg.init()
 
 
@@ -37,15 +37,11 @@ class MainMenu:
         self.menu.add.button(
             "About", action=lambda: pg.event.post(pg.event.Event(events.ABOUT))
         )
-        self.menu.add.button("Exit", pg_menu_events.EXIT)
+        self.menu.add.button("Exit", action=lambda: pg.event.post(pg.event.Event(QUIT)))
 
     def update(self, events):
         if self.menu.is_enabled():
             self.menu.update(events)
             self.menu.draw(self.display)
 
-    def reset(self):
-        self.choosen = None
 
-    def goto(self, part):
-        self.choosen = part

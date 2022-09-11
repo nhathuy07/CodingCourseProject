@@ -7,7 +7,7 @@ from pygame import Surface, rect
 from common import types
 from common.config import DISPLAY_SCALING
 from common.paths import ASSETS_PATH
-from common.types import Ground, Items, PlayerState, Scheme
+from common.types import Ground, Items, PlayerState, Projectiles, Scheme
 from common.utils import load_img
 
 
@@ -145,9 +145,22 @@ class Session:
         self.ITEM_PANE = load_img(ASSETS_PATH / "icons" / "itemPane.png")
         self.INVENTORY_PANE = load_img(ASSETS_PATH / "icons" / "inventoryPane.png")
         self.INVENTORY_PANE_2 = load_img(ASSETS_PATH / "icons" / "inventoryPane2.png")
+        self.HP_PANE = load_img(ASSETS_PATH / "icons" / "hpPane.png")
         
         # Propelling effect
         self.TRAIL_PARTICLE_FX = load_img(ASSETS_PATH / "fx" /"trail.png")
+
+        # Bullet explosion effect
+        self.BULLET_EXPLOSION = None
+
+        # load projectiles
+        self.projectile_dir = ASSETS_PATH / "projectiles"
+        self.projectile = {}
+        for p in Projectiles._member_names_:
+            self.projectile[p] = []
+            for f in (self.projectile_dir / p).glob("*.png"):
+                self.projectile[p].append(load_img(f))
+
     def load_or_create_savefile(self):
         import json
 

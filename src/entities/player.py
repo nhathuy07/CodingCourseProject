@@ -1,12 +1,13 @@
 from math import ceil, floor
 from time import time
 from typing import Any, List
-from common.config import DISPLAY_SCALING, PlayerConfig
-from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED
+from common.config import DISPLAY_SCALING, BulletConfig, PlayerConfig, get_window_size
+from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, SHOOT
 from common.types import Ground, PlayerState
+from entities import bullet
 from entities.collectible import Collectible
 from session import Session
-from pygame import Surface, Rect, event, MOUSEBUTTONDOWN, KEYDOWN, KEYUP, K_ESCAPE, K_a, K_d, K_LEFT, K_RIGHT, K_SPACE, transform
+from pygame import Surface, Rect, event, MOUSEBUTTONDOWN, KEYDOWN, KEYUP, K_LSHIFT, K_RSHIFT, K_a, K_d, K_f, K_LEFT, K_RIGHT, K_SPACE, KMOD_SHIFT, transform
 
 
 class Player:
@@ -19,7 +20,8 @@ class Player:
         jumpingSpd=PlayerConfig.JumpingSpd,
         gravity=PlayerConfig.Gravity,
         acceleration=PlayerConfig.Acceleration,
-        deceleration = PlayerConfig.Deceleration
+        deceleration = PlayerConfig.Deceleration,
+        hp = PlayerConfig.HP
     ) -> None:
         # init position
         self.x = x
@@ -28,6 +30,7 @@ class Player:
         self.dy = 0
         # player inventory
         self.inventory = {}
+        self.hp = hp
 
         self.sprites = session.player_sprite
         self.state: PlayerState = PlayerState.Idle
@@ -58,6 +61,13 @@ class Player:
         self.particle_interval = 0.04
         self.particle_relative_position = [48 * 0.7, 135 * 0.7]
 
+        # damage effect settings
+        self.last_damaged_time = 0
+
+        # shooting settings
+        self.cooldown = 0.3
+        self.last_shoot_time = 0
+
     def clear_event(self):
         # clear events to prevent undesirable behaviors caused by clicking A/D or Left/Right on preload screen
         event.clear()
@@ -76,7 +86,22 @@ class Player:
                     self.inventory[c.collectible_type.name] = 1
                 entities.remove(c)
                 event.post(event.Event(ITEM_COLLECTED))
-                
+    
+    def shoot(self, entities, session):
+        if time() - self.last_shoot_time >= self.cooldown:
+            if not self.image_flipped:
+                bullet_init_pos = (self.rect.x + self.rect.width + 40 * DISPLAY_SCALING, self.rect.y + 50 * DISPLAY_SCALING + self.y_offset)
+                entities.append(bullet.PlayerBullet(session, bullet_init_pos[0], bullet_init_pos[1], dx=BulletConfig.Dx))
+            else:
+                bullet_init_pos = (self.rect.x - 40 * DISPLAY_SCALING, self.rect.y + 50 * DISPLAY_SCALING + self.y_offset)
+                entities.append(bullet.PlayerBullet(session, bullet_init_pos[0], bullet_init_pos[1], dx=-BulletConfig.Dx))
+            self.last_shoot_time = time()
+
+    def check_collision_with_liquid(self, entities: List[Any]):
+        for c in entities:
+            if c.rect.colliderect(self.rect) and type(c).__name__ == "Liquid":
+                self.inflict_damage(100, 0.2, entities=entities)
+
 
     def update_speed_based_on_collision(self, terrain: List[Ground]):
         self.landed = False
@@ -131,8 +156,19 @@ class Player:
             event.post(event.Event(EMIT_TRAIL_PARTICLE))
             self.last_particle_spawn_time = time()
 
-    def update(self, display: Surface, entities):
-        
+    def inflict_damage(self, hp: float, interval: float, knockback: float = 0, entities = None):
+        if time() - self.last_damaged_time >= interval:
+            if not self.image_flipped:
+                self.dx =- knockback
+            else:
+                self.dx = knockback
+
+            # prevent player from clipping through walls
+            self.update_speed_based_on_collision([x for x in entities if type(x).__name__ == "Ground"])
+            self.hp -= hp
+            self.last_damaged_time = time()
+
+    def update(self, display: Surface, entities, session: Session):
         
         # grab user input
         for e in event.get((KEYUP, KEYDOWN)):
@@ -147,6 +183,8 @@ class Player:
                     self.image_flipped = False
                 elif e.key == K_SPACE:
                     self.jump()
+                elif e.key == K_f:
+                    self.shoot(entities, session)
 
             elif e.type == KEYUP:
                 if e.key == K_LEFT or e.key == K_a:
@@ -181,17 +219,28 @@ class Player:
 
         # update player state:
         if self.dx != 0:
-            self.state = PlayerState.Moving
+            if time() - self.last_damaged_time < 0.2:
+                self.state = PlayerState.AttackedWhileMoving
+            else:
+                self.state = PlayerState.Moving
+            
         else:
-            self.state = PlayerState.Idle
+            if time() - self.last_damaged_time < 0.2:
+                self.state = PlayerState.Attacked
+            elif time() - self.last_shoot_time < 0.13:
+                self.state = PlayerState.Shooting
+            else:
+                self.state = PlayerState.Idle
+        
 
-        if self.state == PlayerState.Idle:
+        if self.state == PlayerState.Idle or self.state == PlayerState.Attacked:
             self.floating_effect()
             self.last_particle_spawn_time = 0
         elif self.state == PlayerState.Moving:
             self.particle_effect()
         
         self.collect_item(entities)
+        self.check_collision_with_liquid(entities)
         self.particle_relative_position = [27, self.rect.height - 15 + self.y_offset]
         display.blit(
             transform.flip(self.sprites[self.state.name], True, False) if self.image_flipped else self.sprites[self.state.name],

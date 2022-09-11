@@ -1,3 +1,4 @@
+import ctypes
 from common.types import Items, Levels, Scheme
 from preload_scr import PreLoadScr
 from session import Session
@@ -19,6 +20,7 @@ commonEvents = (
     events.INTRODUCTION_DIALOGUE,
     events.GO_TO_LV_SELECTION,
     events.PRELOAD_SCREEN,
+    pygame.KEYDOWN
 )
 preloaderCode = [x.value for x in Items]
 levelCode = [x.value for x in Levels]
@@ -49,16 +51,19 @@ if __name__ == "__main__":
             eventtype=(*commonEvents, *levelCode, *preloaderCode)
         ):
             if e.type == events.PLAY:
-                session.override_savefile()
-                current_screen = Intro()
-                pygame.event.set_allowed(
-                    (
-                        pygame.MOUSEBUTTONDOWN,
-                        events.INTRODUCTION_DIALOGUE,
-                        pygame.QUIT,
-                        events.EXIT,
+                # display a "Start a new game" confirmation box
+                if ctypes.windll.user32.MessageBoxW(0, "Starting a new game will erase any progress that you have made. Continue?", "Start a new game", 4) == 6:
+                    # erase progress and start new game if user choose "Yes"
+                    session.override_savefile()
+                    current_screen = Intro()
+                    pygame.event.set_allowed(
+                        (
+                            pygame.MOUSEBUTTONDOWN,
+                            events.INTRODUCTION_DIALOGUE,
+                            pygame.QUIT,
+                            events.EXIT,
+                        )
                     )
-                )
             elif e.type == pygame.MOUSEBUTTONDOWN:
                 if type(current_screen).__name__ == "Intro":
                     current_screen.flip()
@@ -104,8 +109,10 @@ if __name__ == "__main__":
                 )
             elif e.type in levelCode:
                 current_screen = World(session, Levels(e.type))
-            elif e.type == pygame.QUIT:
-                quit()
+            
+            elif e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.KMOD_ALT | pygame.K_F4):
+                if ctypes.windll.user32.MessageBoxW(0, "Do you want to exit the game? Unsaved progress (if any) will be lost.", "Exiting...", 0x04 | 0x30) == 6:
+                    quit()
 
         pygame.display.flip()
         clock.tick(60)
