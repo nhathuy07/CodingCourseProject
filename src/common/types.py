@@ -81,3 +81,4 @@ class PlayerState(Enum):
     Moving = 102
     Shooting = 103
     AttackedWhileMoving = 104
+    Destroyed = 105

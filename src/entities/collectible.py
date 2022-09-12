@@ -5,6 +5,7 @@ from session import Session
 
 class Collectible():
     def __init__(self, collectible_type: Collectibles, session: Session, x, y) -> None:
+        self.init_coord = (x, y)
         self.x = x
         self.y = y
         self.collectible_type = collectible_type
@@ -36,6 +37,7 @@ class Collectible():
                 self.alpha -= 2
                     
             self.current_fx.set_alpha(self.alpha)
+            self.glowFxRect.center = self.rect.center
     
     def render(self, display):
         self.update(display)

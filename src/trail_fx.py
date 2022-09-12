@@ -2,6 +2,8 @@ import random
 from common.config import PlayerConfig
 from session import Session
 from pygame import transform
+
+
 class TrailFx():
     def __init__(self, x, y, session: Session, speed) -> None:
         self.x = x
@@ -27,7 +29,8 @@ class TrailFx():
             
             self.rect = self.particle.get_rect()
             self.rect.center = (self.x, self.y)
-        self.rect.y += self.dy
+        # randomize y position
+        self.rect.centery += self.dy
     def render(self, display):
-        self.update()
+        #self.update()
         display.blit(self.particle, (self.rect.x, self.rect.y))

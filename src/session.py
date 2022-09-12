@@ -151,7 +151,7 @@ class Session:
         self.TRAIL_PARTICLE_FX = load_img(ASSETS_PATH / "fx" /"trail.png")
 
         # Bullet explosion effect
-        self.BULLET_EXPLOSION = None
+        self.BULLET_EXPLOSION = load_img(ASSETS_PATH / "fx" / "bullet_explosion.png")
 
         # load projectiles
         self.projectile_dir = ASSETS_PATH / "projectiles"

@@ -1,13 +1,16 @@
+
 from math import ceil, floor
 from time import time
-from typing import Any, List
+from typing import Any, List, Optional
 from common.config import DISPLAY_SCALING, BulletConfig, PlayerConfig, get_window_size
-from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, SHOOT
+from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, PLAYER_DIED, SHOOT
 from common.types import Ground, PlayerState
 from entities import bullet
 from entities.collectible import Collectible
 from session import Session
 from pygame import Surface, Rect, event, MOUSEBUTTONDOWN, KEYDOWN, KEYUP, K_LSHIFT, K_RSHIFT, K_a, K_d, K_f, K_LEFT, K_RIGHT, K_SPACE, KMOD_SHIFT, transform
+
+
 
 
 class Player:
@@ -21,7 +24,8 @@ class Player:
         gravity=PlayerConfig.Gravity,
         acceleration=PlayerConfig.Acceleration,
         deceleration = PlayerConfig.Deceleration,
-        hp = PlayerConfig.HP
+        hp = PlayerConfig.HP,
+        soft_edge = PlayerConfig.SoftEdge
     ) -> None:
         # init position
         self.x = x
@@ -68,6 +72,11 @@ class Player:
         self.cooldown = 0.3
         self.last_shoot_time = 0
 
+        self.soft_edge = soft_edge
+
+        self.destroyed = False
+
+
     def clear_event(self):
         # clear events to prevent undesirable behaviors caused by clicking A/D or Left/Right on preload screen
         event.clear()
@@ -97,10 +106,11 @@ class Player:
                 entities.append(bullet.PlayerBullet(session, bullet_init_pos[0], bullet_init_pos[1], dx=-BulletConfig.Dx))
             self.last_shoot_time = time()
 
-    def check_collision_with_liquid(self, entities: List[Any]):
+    def check_collision_with_liquid(self, entities: List[Any], display):
         for c in entities:
-            if c.rect.colliderect(self.rect) and type(c).__name__ == "Liquid":
-                self.inflict_damage(100, 0.2, entities=entities)
+            if c.rect.colliderect(Rect(self.rect.x, self.rect.y, self.rect.width, self.rect.height * 0.6)) and type(c).__name__ == "Liquid":
+                self.inflict_damage(40, 0.1, entities=entities, display = display)
+                self.terminal_velocity = 3
 
 
     def update_speed_based_on_collision(self, terrain: List[Ground]):
@@ -135,10 +145,30 @@ class Player:
                 ):
                     self.dx = 0
 
-
-        # update character's rect with calculated moving speed
-        self.rect.y += self.dy
         self.rect.x += self.dx
+        self.rect.y += self.dy
+        
+        
+
+    def update_world_offset(self, world):
+        # update world offset
+        # code adopted from S4V - CS102 - Lesson 6 - Milestone 3
+        if world != None:
+            delta_world_offset = 0
+            at_right_edge = self.rect.right >= get_window_size()[0]
+            at_right_soft_edge = self.rect.right > get_window_size()[0] - PlayerConfig.SoftEdge
+            at_left_edge = self.rect.left <= 0
+            at_left_soft_edge = self.rect.left < PlayerConfig.SoftEdge
+            if (
+                at_left_edge
+                or at_right_edge
+                or (at_left_soft_edge and not world.at_left_most())
+                or (at_right_soft_edge and not world.at_right_most())
+            ):
+                self.rect.x -= self.dx
+                delta_world_offset = -self.dx
+            world.update_world_offset(delta_world_offset)
+
 
     def floating_effect(self):
         if self.y_offset < -7:
@@ -156,7 +186,7 @@ class Player:
             event.post(event.Event(EMIT_TRAIL_PARTICLE))
             self.last_particle_spawn_time = time()
 
-    def inflict_damage(self, hp: float, interval: float, knockback: float = 0, entities = None):
+    def inflict_damage(self, hp: float, interval: float, knockback: float = 0, entities = None, display = None):
         if time() - self.last_damaged_time >= interval:
             if not self.image_flipped:
                 self.dx =- knockback
@@ -167,8 +197,13 @@ class Player:
             self.update_speed_based_on_collision([x for x in entities if type(x).__name__ == "Ground"])
             self.hp -= hp
             self.last_damaged_time = time()
+        if self.hp < 0:
+            self.state = PlayerState.Destroyed
+            self.rect.y -= 90 * DISPLAY_SCALING
+            self.destroyed = True
+            
 
-    def update(self, display: Surface, entities, session: Session):
+    def update(self, display: Surface, entities, session: Session, world):
         
         # grab user input
         for e in event.get((KEYUP, KEYDOWN)):
@@ -216,7 +251,7 @@ class Player:
                 self.dx = 0
         
         self.update_speed_based_on_collision([x for x in entities if type(x).__name__ == "Ground"])
-
+        self.update_world_offset(world)
         # update player state:
         if self.dx != 0:
             if time() - self.last_damaged_time < 0.2:
@@ -240,9 +275,13 @@ class Player:
             self.particle_effect()
         
         self.collect_item(entities)
-        self.check_collision_with_liquid(entities)
+        self.check_collision_with_liquid(entities, display)
         self.particle_relative_position = [27, self.rect.height - 15 + self.y_offset]
+        
+    def render(self, display):
         display.blit(
             transform.flip(self.sprites[self.state.name], True, False) if self.image_flipped else self.sprites[self.state.name],
             (self.rect.x - self.rect.width if self.image_flipped else self.rect.x, int(self.rect.y + self.y_offset))
         )
+        if self.destroyed:
+            event.post(event.Event(PLAYER_DIED))
