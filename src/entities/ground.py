@@ -14,5 +14,6 @@ class Ground:
         self.x = x
         self.y = y
         self.rect.topleft = (self.x, self.y)
+
     def render(self, display):
         display.blit(self.image, self.rect.topleft)

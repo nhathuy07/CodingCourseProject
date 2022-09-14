@@ -32,8 +32,8 @@ class PlayerConfig:
     Acceleration = 0.7
     Deceleration = 0.55
     HP = 100
-    SoftEdge = 600
-    
+    SoftEdge = 300
+
 
 @dataclass
 class BulletConfig:
@@ -41,25 +41,28 @@ class BulletConfig:
     Gravity = 0.2
     Damage = 20
 
+
 @dataclass
 class EnemyConfig:
-    Dx = 22
-    Dy = 10
+    Dx = 7
+    Dy = 6
     Damage = 8
-    Hp = 50
-    LocateTargetDelay = 0.45
+    Hp = 20
+    LocateTargetDelay = 0.6
     LocateTargetError = 10
     WeaponCooldown = 0.3
 
+
 @dataclass
 class EnemyType2Config:
-    Dx = 30
+    Dx = 13.5
     Dy = 16.5
     Damage = 18
-    Hp = 70
+    Hp = 40
     LocateTargetDelay = 0.25
     LocateTargetError = 6
     WeaponCooldown = 0.2
+
 
 @dataclass
 class EnemyType3Config:
@@ -70,6 +73,7 @@ class EnemyType3Config:
     LocateTargetDelay = 0.3
     LocateTargetError = 5
     WeaponCooldown = 0.18
+
 
 @dataclass
 class BossConfig:

@@ -29,7 +29,7 @@ class PreLoadScr:
         # display scrolling animation
         if self.bg_offset_y > -165:
             display.blit(session.preloader_bg, (0, self.bg_offset_y))
-            self.bg_offset_y -= 0.5
+            self.bg_offset_y -= 1.2
 
             display.blit(
                 session.preloader_frame,
@@ -55,7 +55,9 @@ class PreLoadScr:
                         280 * DISPLAY_SCALING,
                     ),
                 )
-                required_items_count = session.level_data[self.objective.name]["Items"][key]
+                required_items_count = session.level_data[self.objective.name]["Items"][
+                    key
+                ]
                 disp = self.FONT2.render(str(required_items_count), True, (0, 104, 170))
                 disp_rect = disp.get_rect()
 

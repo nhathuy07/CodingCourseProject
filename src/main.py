@@ -20,7 +20,7 @@ commonEvents = (
     events.INTRODUCTION_DIALOGUE,
     events.GO_TO_LV_SELECTION,
     events.PRELOAD_SCREEN,
-    pygame.KEYDOWN
+    pygame.KEYDOWN,
 )
 preloaderCode = [x.value for x in Items]
 levelCode = [x.value for x in Levels]
@@ -52,7 +52,15 @@ if __name__ == "__main__":
         ):
             if e.type == events.PLAY:
                 # display a "Start a new game" confirmation box
-                if ctypes.windll.user32.MessageBoxW(0, "Starting a new game will erase any progress that you have made. Continue?", "Start a new game", 4) == 6:
+                if (
+                    ctypes.windll.user32.MessageBoxW(
+                        0,
+                        "Starting a new game will erase any progress that you have made. Continue?",
+                        "Start a new game",
+                        4,
+                    )
+                    == 6
+                ):
                     # erase progress and start new game if user choose "Yes"
                     session.override_savefile()
                     current_screen = Intro()
@@ -109,9 +117,19 @@ if __name__ == "__main__":
                 )
             elif e.type in levelCode:
                 current_screen = World(session, Levels(e.type))
-            
-            elif e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.KMOD_ALT | pygame.K_F4):
-                if ctypes.windll.user32.MessageBoxW(0, "Do you want to exit the game? Unsaved progress (if any) will be lost.", "Exiting...", 0x04 | 0x30) == 6:
+
+            elif e.type == pygame.QUIT or (
+                e.type == pygame.KEYDOWN and e.key == pygame.KMOD_ALT | pygame.K_F4
+            ):
+                if (
+                    ctypes.windll.user32.MessageBoxW(
+                        0,
+                        "Do you want to exit the game? Unsaved progress (if any) will be lost.",
+                        "Exiting...",
+                        0x04 | 0x30,
+                    )
+                    == 6
+                ):
                     quit()
 
         pygame.display.flip()

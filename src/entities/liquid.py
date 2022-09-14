@@ -10,5 +10,6 @@ class Liquid:
         self.image = session.liquid_texture[liquid_type.name]
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
+
     def render(self, display):
         display.blit(self.image, (self.rect.x, self.rect.y))

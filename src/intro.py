@@ -54,7 +54,8 @@ class Intro:
             current_scene.set_alpha(self.alpha)
             display.blit(current_scene, (0, 0))
             display.blit(
-                session.CLICK_PROMPT, (get_window_size()[0] - session.CLICK_PROMPT.get_width() - 20, 20)
+                session.CLICK_PROMPT,
+                (get_window_size()[0] - session.CLICK_PROMPT.get_width() - 20, 20),
             )
 
             # draw text

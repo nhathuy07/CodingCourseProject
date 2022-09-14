@@ -7,8 +7,8 @@ from pygame import transform, font, event
 import time
 
 
-class InventoryPane():
-    def __init__(self, session: Session, inventory: Dict[str, int], x = 0, y = 20) -> None:
+class InventoryPane:
+    def __init__(self, session: Session, inventory: Dict[str, int], x=0, y=20) -> None:
         self.x = x
         self.y = y
         self.image = session.INVENTORY_PANE
@@ -21,7 +21,7 @@ class InventoryPane():
         self.last_item_collection_time = 0
 
         self.auto_center_x()
-        
+
     def auto_center_x(self):
         # automatically align InventoryPane horizontally
         self.x = (get_window_size()[0] - self.rect.width) / 2
@@ -39,7 +39,7 @@ class InventoryPane():
         for e in event.get(ITEM_COLLECTED):
             if e.type == ITEM_COLLECTED:
                 self.last_item_collection_time = time.time()
-        
+
         # show inventory pane
         if (time.time() - self.last_item_collection_time) <= 0.2:
             # show effect for 0.2 secs after collecting item
@@ -56,15 +56,29 @@ class InventoryPane():
         # show items that are in player's inventory
         for i in range(len(self.inventory)):
             size = 80 * DISPLAY_SCALING
-            current_item_img = transform.smoothscale(session.collectibles[list(self.inventory.keys())[i]]["Full"], (size, size))
+            current_item_img = transform.smoothscale(
+                session.collectibles[list(self.inventory.keys())[i]]["Full"],
+                (size, size),
+            )
 
             # item counter
-            text = self.font.render(str(inventory[list(self.inventory.keys())[i]]), True, (255, 255, 255))
-            # align items automatically
-            current_item_pos = (((self.rect.width / inventory_length) - size - text.get_width() - 10) / 2 + (self.rect.width / inventory_length * i) + self.rect.x, (self.rect.height - size) / 2 + self.rect.y)
-            display.blit(
-                current_item_img, current_item_pos
+            text = self.font.render(
+                str(inventory[list(self.inventory.keys())[i]]), True, (255, 255, 255)
             )
-            
-            display.blit(text, (current_item_pos[0] + size, (self.rect.height - text.get_height()) / 2 + self.rect.y))
-        
+            # align items automatically
+            current_item_pos = (
+                ((self.rect.width / inventory_length) - size - text.get_width() - 10)
+                / 2
+                + (self.rect.width / inventory_length * i)
+                + self.rect.x,
+                (self.rect.height - size) / 2 + self.rect.y,
+            )
+            display.blit(current_item_img, current_item_pos)
+
+            display.blit(
+                text,
+                (
+                    current_item_pos[0] + size,
+                    (self.rect.height - text.get_height()) / 2 + self.rect.y,
+                ),
+            )

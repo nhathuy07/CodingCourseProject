@@ -82,3 +82,15 @@ class PlayerState(Enum):
     Shooting = 103
     AttackedWhileMoving = 104
     Destroyed = 105
+
+
+class Mobs(Enum):
+    Type1 = 0
+    Type2 = 1
+    Type3 = 2
+
+
+class MobState(Enum):
+    Idle = "idle"
+    Attacking = "attacking"
+    Hurt = "hurt"

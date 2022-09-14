@@ -3,8 +3,18 @@ from common.config import BulletConfig
 from session import Session
 from pygame import transform
 from time import time
-class PlayerBullet():
-    def __init__(self, session: Session, x, y, dx = BulletConfig.Dx, gravity = BulletConfig.Gravity, damage = BulletConfig.Damage) -> None:
+
+
+class PlayerBullet:
+    def __init__(
+        self,
+        session: Session,
+        x,
+        y,
+        dx=BulletConfig.Dx,
+        gravity=BulletConfig.Gravity,
+        damage=BulletConfig.Damage,
+    ) -> None:
         self.x = x
         self.y = y
         self.dx = dx
@@ -18,7 +28,7 @@ class PlayerBullet():
         self.rect = self.base_rect
         self.animation_interval = 0.07
         self.last_animation_call = 0
-        
+
         self.exploded = False
         # explosion effect settings
         self.fx_image = session.BULLET_EXPLOSION
@@ -32,7 +42,7 @@ class PlayerBullet():
     def update(self, entities):
 
         if not self.exploded:
-            
+
             self.current_img = self.images[self.index % len(self.images)]
             self.rect = self.base_rect
             self.rect.x += self.dx
@@ -41,26 +51,29 @@ class PlayerBullet():
             if time() - self.last_animation_call >= self.animation_interval:
                 self.index += 1
             for e in entities:
-                if self.base_rect.colliderect(e.rect) and type(e).__name__ == "Ground":
+                if self.base_rect.colliderect(e.rect) and type(e).__name__ in ["Ground", "Enemy"]:
                     self.exploded = True
         elif self.alpha >= 0:
-            
+
             self.rotation = randint(0, 360)
             self.fx_scale += 0.08
             self.alpha -= 11
             self.current_img = self.fx_image
 
             self.current_img.set_alpha(self.alpha)
-            self.current_img = transform.smoothscale(self.current_img, (self.fx_scale * self.init_size, self.fx_scale * self.init_size))
+            self.current_img = transform.smoothscale(
+                self.current_img,
+                (self.fx_scale * self.init_size, self.fx_scale * self.init_size),
+            )
             self.fx_rect = self.current_img.get_rect()
             self.fx_rect.center = self.rect.center
-            
+
         else:
             pass
         self.init_coord = self.rect.topleft
-        
+
     def render(self, display, entities):
-        #self.update(entities)
+        # self.update(entities)
         if not self.exploded:
             display.blit(self.current_img, self.rect.topleft)
         else:

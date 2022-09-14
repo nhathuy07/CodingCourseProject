@@ -4,7 +4,8 @@
         "Items": {
             "GREY": 7,
             "YELLOW": 4
-        }
+        },
+        "AvailableMobType": ["Type1"]
     },
     "THRUSTER": {
         "Scheme": "BlueCave",
@@ -12,7 +13,8 @@
             "GREY": 6,
             "YELLOW": 4,
             "GREEN": 3
-        }
+        },
+        "AvailableMobType": ["Type1, Type2"]
     },
     "COMM_SYSTEM": {
         "Scheme": "LavaCave",
@@ -21,12 +23,14 @@
             "YELLOW": 4,
             "GREEN": 5,
             "PURPLE": 3
-        }
+        },
+        "AvailableMobType": ["Type2"]
     },
     "ENERGY_CORE": {
         "Scheme": "DarkCave",
         "Items": {
             "ENERGY_BAR": 8
-        }
+        },
+        "AvailableMobType": ["Type3"]
     }
 }

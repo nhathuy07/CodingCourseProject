@@ -7,7 +7,7 @@ from pygame import Surface, rect
 from common import types
 from common.config import DISPLAY_SCALING
 from common.paths import ASSETS_PATH
-from common.types import Ground, Items, PlayerState, Projectiles, Scheme
+from common.types import Ground, Items, MobState, Mobs, PlayerState, Projectiles, Scheme
 from common.utils import load_img
 
 
@@ -105,14 +105,13 @@ class Session:
                 )
             else:
                 self.collectibles[c.name]["GlowFx"] = None
-            
+
             if (self.collectible_dir / c.name.lower() / "Full.png").exists():
                 self.collectibles[c.name]["Full"] = utils.load_img(
                     self.collectible_dir / c.name.lower() / "Full.png"
                 )
             else:
                 self.collectibles[c.name]["Full"] = None
-            
 
         self.ground_texture_dir = paths.ASSETS_PATH / "ground"
         self.ground_texture = {}
@@ -136,19 +135,20 @@ class Session:
         self.player_sprite = {}
         for sprite in PlayerState:
             self.player_sprite[sprite.name] = load_img(
-                self.character_sprite_dir / "Mark" / f"{sprite.name}.png",
-                0.7
+                self.character_sprite_dir / "Mark" / f"{sprite.name}.png", 0.7
             )
 
         # UI elements
-        self.CLICK_PROMPT = load_img(ASSETS_PATH / "icons" / "click-tap-svgrepo-com.png", 1.3)
+        self.CLICK_PROMPT = load_img(
+            ASSETS_PATH / "icons" / "click-tap-svgrepo-com.png", 1.3
+        )
         self.ITEM_PANE = load_img(ASSETS_PATH / "icons" / "itemPane.png")
         self.INVENTORY_PANE = load_img(ASSETS_PATH / "icons" / "inventoryPane.png")
         self.INVENTORY_PANE_2 = load_img(ASSETS_PATH / "icons" / "inventoryPane2.png")
         self.HP_PANE = load_img(ASSETS_PATH / "icons" / "hpPane.png")
-        
+
         # Propelling effect
-        self.TRAIL_PARTICLE_FX = load_img(ASSETS_PATH / "fx" /"trail.png")
+        self.TRAIL_PARTICLE_FX = load_img(ASSETS_PATH / "fx" / "trail.png")
 
         # Bullet explosion effect
         self.BULLET_EXPLOSION = load_img(ASSETS_PATH / "fx" / "bullet_explosion.png")
@@ -160,6 +160,17 @@ class Session:
             self.projectile[p] = []
             for f in (self.projectile_dir / p).glob("*.png"):
                 self.projectile[p].append(load_img(f))
+
+        # load mobs
+        self.mobs_dir = ASSETS_PATH / "mobs"
+        self.mobs = {}
+        for p in Mobs._member_names_:
+            self.mobs[p] = {}
+            for d in (self.mobs_dir / p).glob("*"):
+                for m in MobState._member_names_:
+                    self.mobs[p][m] = list(
+                        map(load_img, Path(self.mobs_dir / p.lower() / m.lower()).glob("*"))
+                    )
 
     def load_or_create_savefile(self):
         import json

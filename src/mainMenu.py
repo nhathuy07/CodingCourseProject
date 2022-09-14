@@ -5,6 +5,7 @@ from common import events
 from common.config import get_window_size
 from session import Session
 from pygame import QUIT
+
 pg.init()
 
 
@@ -43,5 +44,3 @@ class MainMenu:
         if self.menu.is_enabled():
             self.menu.update(events)
             self.menu.draw(self.display)
-
-
