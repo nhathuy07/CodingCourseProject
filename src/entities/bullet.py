@@ -1,7 +1,7 @@
 from random import randint, random
 from common.config import BulletConfig
 from session import Session
-from pygame import transform
+from pygame import transform, draw
 from time import time
 
 
@@ -29,6 +29,8 @@ class PlayerBullet:
         self.animation_interval = 0.07
         self.last_animation_call = 0
 
+
+        self.explosion_time = 0
         self.exploded = False
         # explosion effect settings
         self.fx_image = session.BULLET_EXPLOSION
@@ -51,8 +53,10 @@ class PlayerBullet:
             if time() - self.last_animation_call >= self.animation_interval:
                 self.index += 1
             for e in entities:
-                if self.base_rect.colliderect(e.rect) and type(e).__name__ in ["Ground", "Enemy"]:
-                    self.exploded = True
+                if self.rect.colliderect(e.rect) and type(e).__name__ in ["Ground", "Enemy"]:
+                    self.explosion_time = time() + 0.01
+            if time() >= self.explosion_time and self.explosion_time > 0:
+                self.exploded = True
         elif self.alpha >= 0:
 
             self.rotation = randint(0, 360)
@@ -76,5 +80,7 @@ class PlayerBullet:
         # self.update(entities)
         if not self.exploded:
             display.blit(self.current_img, self.rect.topleft)
+            draw.rect(display, (0, 255, 255), self.rect, 5)
         else:
             display.blit(self.current_img, self.fx_rect.topleft)
+            draw.rect(display, (0, 255, 255), self.rect, 5)

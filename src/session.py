@@ -86,11 +86,6 @@ class Session:
 
         self.lv_selection_bg = utils.load_img(self.lv_selection_bg_dir)
 
-        self.preloader_bg_dir = paths.ASSETS_PATH / "background" / "LevelLoading.png"
-        self.preloader_bg = utils.load_img(self.preloader_bg_dir)
-
-        self.preloader_frame_dir = paths.ASSETS_PATH / "icons" / "goalScreen.png"
-        self.preloader_frame = utils.load_img(self.preloader_frame_dir)
 
         self.collectible_dir = paths.ASSETS_PATH / "items" / "collectibles"
         self.collectibles: Dict[str, Dict[str, Surface]] = {}
@@ -139,13 +134,23 @@ class Session:
             )
 
         # UI elements
+        # Preloader UI
+        self.preloader_bg_dir = paths.ASSETS_PATH / "background" / "LevelLoading.png"
+        self.preloader_bg = utils.load_img(self.preloader_bg_dir)
+
+        self.preloader_frame_dir = paths.ASSETS_PATH / "icons" / "goalScreen.png"
+        self.preloader_frame = utils.load_img(self.preloader_frame_dir)
+
         self.CLICK_PROMPT = load_img(
             ASSETS_PATH / "icons" / "click-tap-svgrepo-com.png", 1.3
         )
+
+        # Panes
         self.ITEM_PANE = load_img(ASSETS_PATH / "icons" / "itemPane.png")
         self.INVENTORY_PANE = load_img(ASSETS_PATH / "icons" / "inventoryPane.png")
         self.INVENTORY_PANE_2 = load_img(ASSETS_PATH / "icons" / "inventoryPane2.png")
         self.HP_PANE = load_img(ASSETS_PATH / "icons" / "hpPane.png")
+        self.WEAPON_PERK_TIMER_PANE = load_img(ASSETS_PATH / "icons" / "weaponPerkTimer.png")
 
         # Propelling effect
         self.TRAIL_PARTICLE_FX = load_img(ASSETS_PATH / "fx" / "trail.png")
@@ -153,6 +158,8 @@ class Session:
         # Bullet explosion effect
         self.BULLET_EXPLOSION = load_img(ASSETS_PATH / "fx" / "bullet_explosion.png")
 
+        # Mission Completed
+        self.MISSION_COMPLETED_SCR = load_img(ASSETS_PATH / "icons" / "missionCompletedScreen.png")
         # load projectiles
         self.projectile_dir = ASSETS_PATH / "projectiles"
         self.projectile = {}

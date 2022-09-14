@@ -30,7 +30,9 @@ class Collectibles(Enum):
     PURPLE = 12
     YELLOW = 13
     ENERGY_BAR = 14
+    WEAPON_SUPERCHARGER = 15
 
+Ores = (Collectibles.GREEN, Collectibles.GREY, Collectibles.PURPLE, Collectibles.YELLOW)
 
 class Ground(Enum):
     # Base = -1

@@ -1,5 +1,6 @@
 import ctypes
 from common.types import Items, Levels, Scheme
+from mission_completed import MissionCompletedScr
 from preload_scr import PreLoadScr
 from session import Session
 from mainMenu import MainMenu
@@ -20,6 +21,7 @@ commonEvents = (
     events.INTRODUCTION_DIALOGUE,
     events.GO_TO_LV_SELECTION,
     events.PRELOAD_SCREEN,
+    events.MISSION_COMPLETED,
     pygame.KEYDOWN,
 )
 preloaderCode = [x.value for x in Items]
@@ -31,21 +33,32 @@ if __name__ == "__main__":
     display = pygame.display.set_mode(config.get_window_size(), pygame.HWACCEL)
     clock = pygame.time.Clock()
     current_screen = MainMenu(session, display)
+    common_events_allowed = False
     while True:
         # update screens
         if type(current_screen).__name__ == "MainMenu":
-            pygame.event.set_allowed(commonEvents)
+            if not common_events_allowed:
+                pygame.event.set_allowed(commonEvents)
+                common_events_allowed = True
             current_screen.update([e for e in pygame.event.get()])
         elif type(current_screen).__name__ == "Intro":
+            common_events_allowed = False
             current_screen.update(display, session)
         elif type(current_screen).__name__ == "Dialogue":
+            common_events_allowed = False
             current_screen.update(display, session)
         elif type(current_screen).__name__ == "LvSelection":
+            common_events_allowed = False
             current_screen.update(session, display)
         elif type(current_screen).__name__ == "PreLoadScr":
+            common_events_allowed = False
             current_screen.update(session, display)
         elif type(current_screen).__name__ == "World":
+            common_events_allowed = False
             current_screen.update(session, display, clock.get_fps())
+        elif type(current_screen).__name__ == "MissionCompletedScr":
+            common_events_allowed = False
+            current_screen.update(display)
 
         for e in pygame.event.get(
             eventtype=(*commonEvents, *levelCode, *preloaderCode)
@@ -110,6 +123,8 @@ if __name__ == "__main__":
                         pygame.MOUSEBUTTONDOWN,
                     )
                 )
+            elif e.type == events.MISSION_COMPLETED:
+                current_screen = MissionCompletedScr(session)
             elif e.type in preloaderCode:
                 current_screen = PreLoadScr(session, Items(e.type))
                 pygame.event.set_allowed(

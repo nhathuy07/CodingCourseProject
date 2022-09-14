@@ -4,7 +4,8 @@ from session import Session
 
 
 class Collectible:
-    def __init__(self, collectible_type: Collectibles, session: Session, x, y) -> None:
+    def __init__(self, collectible_type: Collectibles, session: Session, x, y, og_position = False) -> None:
+        self.og_position = False
         self.init_coord = (x, y)
         self.x = x
         self.y = y

@@ -1,10 +1,9 @@
 from random import randint
 from time import time
-from common.config import DISPLAY_SCALING, BulletConfig, get_window_size
+from common.config import DISPLAY_SCALING, FONT, BulletConfig, get_window_size
 from common.types import MobState, Mobs
 from session import Session
-from pygame import transform
-
+from pygame import transform, draw, font
 class Enemy:
     def __init__(
         self,
@@ -28,8 +27,14 @@ class Enemy:
         self.sprites = session.mobs[mob_type.name]
         self.state = MobState.Idle
         self.rect = self.sprites[self.state.name][0].get_rect()
-        self.rect.topleft = (int(self.x + 70 * DISPLAY_SCALING), self.y)
-        self.rect.width -= 70 * DISPLAY_SCALING
+        # enemy flies from x = -300
+        if self.side == 0:
+            self.rect.topleft = (self.x - 300, self.y)
+            self.rect.width -= 70 * DISPLAY_SCALING
+        # enemy files from x = window_width
+        elif self.side == 1:
+            self.rect.topleft = (self.x + 53 * DISPLAY_SCALING, self.y)
+            self.rect.width -= 100 * DISPLAY_SCALING
         self.init_dx = init_dx if self.side == 0 else -init_dx
         self.init_dy = init_dy
         self.damage = damage
@@ -72,26 +77,29 @@ class Enemy:
             if time() - self.last_attack_time >= self.weapon_cooldown:
                 self.attack_anim_finished = False
                 self.attack(world, display)
-                self.last_attack_time = time()
-                self.state = MobState.Attacking
+                #self.last_attack_time = time()
+                
         self.init_coord = [self.rect.x, self.rect.y]
 
-        if time() - self.last_hurt_time > 0.15:
+        if time() - self.last_hurt_time > 0.4 and self.state == MobState.Hurt:
             self.state = MobState.Idle
 
-    def attack(self, world, display):
-        self.attack_anim_frame = 0
-        world.player.inflict_damage(self.damage, self.weapon_cooldown, 0, world.entities, display)
-        if time() - self.last_attack_time > 0.4 * self.attack_anim_frame:
-            if not self.attack_anim_finished:
-                
+        if self.state == MobState.Attacking and not self.attack_anim_finished:
+            if time() - self.last_attack_time >= 0.1 * self.attack_anim_frame:
+                self.attack_anim_frame += 1
                 if self.attack_anim_frame > 2:
                     self.state = MobState.Idle
                     self.attack_anim_frame = 0
                     self.attack_anim_finished = True
                     self.state = MobState.Idle
-                else:
-                    self.attack_anim_frame += 1
+                    
+
+    def attack(self, world, display):
+        self.state = MobState.Attacking
+        world.player.inflict_damage(self.damage, self.weapon_cooldown, 0, world.entities, display)
+        self.attack_anim_frame = 0
+        self.last_attack_time = time()
+        
 
     def render(self, display):
         if self.side == 0:
@@ -99,11 +107,14 @@ class Enemy:
         else:
             current_img = self.sprites[self.state.name][self.attack_anim_frame % len(self.sprites[self.state.name])]
         display.blit(current_img, (self.rect.left - int(70 * DISPLAY_SCALING), self.rect.top))
-
+        self.font = font.Font(FONT[0], 18)
+        stateDisp = self.font.render(f"{self.state.name}, {self.attack_anim_frame}", True, (255, 255, 255))
+        display.blit(stateDisp, (self.rect.left - int(70 * DISPLAY_SCALING), self.rect.top - 10))
+        draw.rect(display, (255, 0, 0), self.rect, 5)
     def check_collision_with_bullet(self, bullets):
         for b in bullets:
-            if b.rect.colliderect(self.rect) and time() - self.last_hurt_time > 0.1: # Enemy becomes temporarily invincible after being shot
+            if b.rect.colliderect(self.rect) and time() - self.last_hurt_time > 0.1 and not b.exploded: # Enemy becomes temporarily invincible after being shot
                 self.attack_anim_frame = 0
-                self.hp -= BulletConfig.Damage
+                self.hp -= b.damage
                 self.state = MobState.Hurt
                 self.last_hurt_time = time()

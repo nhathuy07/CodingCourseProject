@@ -1,9 +1,9 @@
-from math import ceil, floor
+
 from time import time
 from typing import Any, List, Optional
 from common.config import DISPLAY_SCALING, BulletConfig, PlayerConfig, get_window_size
 from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, PLAYER_DIED, SHOOT
-from common.types import Ground, PlayerState
+from common.types import Collectibles, Ground, PlayerState
 from entities import bullet
 from entities.collectible import Collectible
 from session import Session
@@ -83,12 +83,16 @@ class Player:
         self.last_damaged_time = 0
 
         # shooting settings
+        self.damage = BulletConfig.Damage
         self.cooldown = 0.3
         self.last_shoot_time = 0
 
         self.soft_edge = soft_edge
 
         self.destroyed = False
+
+        self.gun_perk_expire_time = 0
+        self.gun_perk_timer_pane = None
 
     def clear_event(self):
         # clear events to prevent undesirable behaviors caused by clicking A/D or Left/Right on preload screen
@@ -99,18 +103,28 @@ class Player:
             self.landed = False
             self.dy = -self.jumping_speed
 
-    def collect_item(self, entities: List[Any]):
+    def collect_item(self, entities: List[Collectible]):
         for c in entities:
             # grab all entities of type ground
             if c.rect.colliderect(self.rect) and type(c).__name__ == "Collectible":
-                if c.collectible_type.name in self.inventory:
-                    self.inventory[c.collectible_type.name] += 1
-                else:
-                    self.inventory[c.collectible_type.name] = 1
-                entities.remove(c)
-                event.post(event.Event(ITEM_COLLECTED))
+                if c.collectible_type in (Collectibles.GREY, Collectibles.GREEN, Collectibles.PURPLE, Collectibles.YELLOW):
+                    if c.collectible_type.name in self.inventory:
+                        self.inventory[c.collectible_type.name] += 1
+                    else:
+                        self.inventory[c.collectible_type.name] = 1
+                    entities.remove(c)
+                    event.post(event.Event(ITEM_COLLECTED))
+                elif c.collectible_type == Collectibles.WEAPON_SUPERCHARGER:
+                    self.gun_perk_expire_time = time() + PlayerConfig.PerkDuration
+                    entities.remove(c)
 
     def shoot(self, entities, session):
+        if time() < self.gun_perk_expire_time:
+            self.damage = BulletConfig.Damage * 1.5
+        else:
+            self.damage = BulletConfig.Damage
+        
+
         if time() - self.last_shoot_time >= self.cooldown:
             if not self.image_flipped:
                 bullet_init_pos = (
@@ -123,6 +137,7 @@ class Player:
                         bullet_init_pos[0],
                         bullet_init_pos[1],
                         dx=BulletConfig.Dx,
+                        damage=self.damage
                     )
                 )
             else:
@@ -323,7 +338,7 @@ class Player:
         else:
             if time() - self.last_damaged_time < 0.2:
                 self.state = PlayerState.Attacked
-            elif time() - self.last_shoot_time < 0.13:
+            elif time() - self.last_shoot_time < 0.1:
                 self.state = PlayerState.Shooting
             else:
                 self.state = PlayerState.Idle

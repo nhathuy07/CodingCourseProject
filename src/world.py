@@ -1,5 +1,6 @@
 import ctypes
 from math import floor
+from operator import inv
 from random import choice, choices, randint, random
 from time import time
 from common import types
@@ -16,10 +17,12 @@ from common.events import (
     EMIT_TRAIL_PARTICLE,
     GO_TO_LV_SELECTION,
     ITEM_COLLECTED,
+    MISSION_COMPLETED,
     PLAYER_DIED,
 )
-from common.types import Collectibles, Items, Levels, Liquid, Mobs, Scheme
+from common.types import Collectibles, Items, Levels, Liquid, Mobs, Ores, Scheme
 from entities.enemy import Enemy
+from gunPerkTimerPane import GunPerkTimerPane
 from hpPane import HPPane
 from inventoryPane import InventoryPane
 from session import Session
@@ -51,7 +54,12 @@ class World:
             session,
             self.player,
         )
-
+        self.perk_timer_pane = GunPerkTimerPane(
+            10,
+            self.inventory_pane.rect.y,
+            session,
+            self.player
+        )
         self.delta_screen_offset = 0
         self.abs_screen_offset = 0
         self.min_abs_screen_offset = (
@@ -69,6 +77,7 @@ class World:
                 PLAYER_DIED,
                 GO_TO_LV_SELECTION,
                 Items[self.level.name].value,
+                MISSION_COMPLETED
             )
         )
 
@@ -179,7 +188,10 @@ class World:
                         liquid.Liquid(session, pos[0], pos[1], Liquid(entityNo))
                     )
                 elif int(self.entities_map[i][j]) in [v.value for v in Collectibles]:
-                    pos = (j * 60 * DISPLAY_SCALING, (i * 60 * DISPLAY_SCALING) + 13)
+                    if Collectibles(int(self.entities_map[i][j])) in Ores:
+                        pos = (j * 60 * DISPLAY_SCALING, (i * 60 * DISPLAY_SCALING) + 13)
+                    else:
+                        pos = (j * 60 * DISPLAY_SCALING, (i * 60 * DISPLAY_SCALING))
                     entityNo = int(self.entities_map[i][j])
                     self.entities.append(
                         collectible.Collectible(
@@ -253,8 +265,23 @@ class World:
 
         self.inventory_pane.render(session, display, self.player.inventory)
         self.hp_pane.render(self.player, display)
+        self.perk_timer_pane.render(self.player, display)
 
         self.player.render(display)
+        self.inventory_check(session)
+
+    def inventory_check(self, session: Session):
+        inventory_check_result = []
+        for item in self.player.inventory:
+            if self.player.inventory[item] >= self.goal[item]:
+                inventory_check_result.append(True)
+            else:
+                inventory_check_result.append(False)
+        if False not in inventory_check_result and len(inventory_check_result) != 0:
+            event.post(event.Event(MISSION_COMPLETED))
+            session.add_item(Items[self.level.name])
+            session.update_savefile()
+
 
     def update_world_offset(self, delta):
         # Code from S4V - CS102 - Lesson 6 - Milestone 3

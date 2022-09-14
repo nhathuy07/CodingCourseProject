@@ -33,6 +33,7 @@ class PlayerConfig:
     Deceleration = 0.55
     HP = 100
     SoftEdge = 300
+    PerkDuration = 22
 
 
 @dataclass
@@ -46,18 +47,18 @@ class BulletConfig:
 class EnemyConfig:
     Dx = 7
     Dy = 6
-    Damage = 8
-    Hp = 20
+    Damage = 6
+    Hp = 25
     LocateTargetDelay = 0.6
     LocateTargetError = 10
-    WeaponCooldown = 0.3
+    WeaponCooldown = 0.4
 
 
 @dataclass
 class EnemyType2Config:
     Dx = 13.5
     Dy = 16.5
-    Damage = 18
+    Damage = 10
     Hp = 40
     LocateTargetDelay = 0.25
     LocateTargetError = 6
