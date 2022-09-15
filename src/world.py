@@ -1,12 +1,12 @@
 import ctypes
 from math import floor
-from operator import inv
-from random import choice, choices, randint, random
+from random import SystemRandom, choice, choices, randint, random
 from time import time
 from common import types
 from common.config import (
     DISPLAY_SCALING,
     FONT,
+    DripstoneConfig,
     EnemyConfig,
     EnemyType2Config,
     EnemyType3Config,
@@ -20,7 +20,8 @@ from common.events import (
     MISSION_COMPLETED,
     PLAYER_DIED,
 )
-from common.types import Collectibles, Items, Levels, Liquid, Mobs, Ores, Scheme
+from common.types import Collectibles, Items, Levels, Liquid, Mobs, Ores, Projectiles, Scheme
+from entities.dripstone import Dripstone
 from entities.enemy import Enemy
 from gunPerkTimerPane import GunPerkTimerPane
 from hpPane import HPPane
@@ -30,7 +31,7 @@ from entities.ground import Ground
 from entities import collectible, liquid, player
 from pygame import font, event, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, KEYDOWN, KEYUP
 
-from trail_fx import TrailFx
+from visual_fx.trail_fx import TrailFx
 
 
 class World:
@@ -82,7 +83,13 @@ class World:
         )
 
         self.last_mob_spawn = 0
-        self.mob_spawn_interval = 3
+        self.mob_spawn_interval = 6
+
+        self.last_dripstone_spawn = 0
+        self.dripstone_spawn_interval = 9
+
+        self.init_time = time()
+        self.rng = SystemRandom()
 
     def load_bg(self, session: Session):
         self.bg = session.background[self.scheme.value]
@@ -198,12 +205,19 @@ class World:
                             Collectibles(entityNo), session, pos[0], pos[1]
                         )
                     )
+                elif int(self.entities_map[i][j]) == Projectiles.Dripstone.value:
+                    self.entities.append(
+                        Dripstone(
+                            session, j * 60 * DISPLAY_SCALING, i * 60 * DISPLAY_SCALING
+                        )
+
+                    )
 
     def update(self, session: Session, display, fps):
         display.fill((0, 0, 0))
         display.blit(self.bg, (0, 0))
         self.player.update(display, self.entities, session, self)
-        if time() - self.last_mob_spawn > self.mob_spawn_interval:
+        if time() - self.last_mob_spawn > self.mob_spawn_interval and time() - self.init_time > 2:
             self.spawn_mob(session)
             self.last_mob_spawn = time()
         for e in self.entities:
@@ -223,6 +237,14 @@ class World:
                 if e.hp <= 0:
                     self.entities.remove(e)
                 e.render(display)
+            elif type(e).__name__ == "Dripstone":
+                e.update(session, self)
+                e.rect.left += self.delta_screen_offset
+                if e.rect.top <= get_window_size()[1]:
+                    e.render(display)
+                else:
+                    self.entities.remove(e)
+
             else:
                 e.rect.left = e.init_coord[0] + self.abs_screen_offset
                 e.render(display)

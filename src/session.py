@@ -152,11 +152,15 @@ class Session:
         self.HP_PANE = load_img(ASSETS_PATH / "icons" / "hpPane.png")
         self.WEAPON_PERK_TIMER_PANE = load_img(ASSETS_PATH / "icons" / "weaponPerkTimer.png")
 
+        # --VISUAL FX--
         # Propelling effect
         self.TRAIL_PARTICLE_FX = load_img(ASSETS_PATH / "fx" / "trail.png")
 
         # Bullet explosion effect
         self.BULLET_EXPLOSION = load_img(ASSETS_PATH / "fx" / "bullet_explosion.png")
+
+        # Dripstone dropping effect
+        self.DRIPSTONE_FALLING = load_img(ASSETS_PATH / "fx" / "dripstone_falling.png")
 
         # Mission Completed
         self.MISSION_COMPLETED_SCR = load_img(ASSETS_PATH / "icons" / "missionCompletedScreen.png")

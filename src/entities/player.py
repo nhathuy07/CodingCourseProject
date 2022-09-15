@@ -27,7 +27,7 @@ from pygame import (
 )
 
 
-class Player:
+class Player():
     def __init__(
         self,
         session: Session,
@@ -40,12 +40,14 @@ class Player:
         deceleration=PlayerConfig.Deceleration,
         hp=PlayerConfig.HP,
         soft_edge=PlayerConfig.SoftEdge,
+        cooldown = PlayerConfig.WeaponCooldown
     ) -> None:
         # init position
         self.x = x
         self.y = y
         self.dx = 0
         self.dy = 0
+        self.cooldown = cooldown
         # player inventory
         self.inventory = {}
         self.hp = hp
@@ -266,10 +268,12 @@ class Player:
             else:
                 self.dx = knockback
 
-            # prevent player from clipping through walls
-            self.update_speed_based_on_collision(
-                [x for x in entities if type(x).__name__ == "Ground"]
-            )
+            # checking collision with terrain is only needed when player is knocked backwards
+            if knockback != 0:
+                # prevent player from clipping through walls
+                self.update_speed_based_on_collision(
+                    [x for x in entities if type(x).__name__ == "Ground"]
+                )
             self.hp -= hp
             self.last_damaged_time = time()
         if self.hp < 0:

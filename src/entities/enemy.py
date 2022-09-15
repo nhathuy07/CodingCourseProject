@@ -92,7 +92,6 @@ class Enemy:
                     self.attack_anim_frame = 0
                     self.attack_anim_finished = True
                     self.state = MobState.Idle
-                    
 
     def attack(self, world, display):
         self.state = MobState.Attacking

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from dis import dis
 from pygame import image, transform, Rect, display
 from common.paths import ASSETS_PATH, DATA_PATH
 
@@ -34,6 +33,7 @@ class PlayerConfig:
     HP = 100
     SoftEdge = 300
     PerkDuration = 22
+    WeaponCooldown = 0.2
 
 
 @dataclass
@@ -85,3 +85,14 @@ class BossConfig:
     SimultaneousMeteoriteSpawn = (5, 7)
     InstakillPosibilities = 0.1
     GrowlKnockbackDistance = 20
+
+@dataclass
+class DripstoneConfig:
+    Dy = 16
+    Damage = 30
+    ScaleMin = 0.3
+    ScaleMax = 1
+    SpawnError = 100
+    SpawnQuantity = 5
+    Gravity = 0.25
+    TerminalVelocity = 28
