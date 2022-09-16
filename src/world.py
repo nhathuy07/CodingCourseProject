@@ -29,8 +29,8 @@ from inventoryPane import InventoryPane
 from session import Session
 from entities.ground import Ground
 from entities import collectible, liquid, player
-from pygame import font, event, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, KEYDOWN, KEYUP
-
+from pygame import font, event, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, KEYDOWN, KEYUP, K_ESCAPE, key
+import pymsgbox
 from visual_fx.trail_fx import TrailFx
 
 
@@ -90,6 +90,9 @@ class World:
 
         self.init_time = time()
         self.rng = SystemRandom()
+
+        self.paused = False
+        self.pause_msg_box_displayed = False
 
     def load_bg(self, session: Session):
         self.bg = session.background[self.scheme.value]
@@ -214,83 +217,97 @@ class World:
                     )
 
     def update(self, session: Session, display, fps):
-        display.fill((0, 0, 0))
-        display.blit(self.bg, (0, 0))
-        self.player.update(display, self.entities, session, self)
-        if time() - self.last_mob_spawn > self.mob_spawn_interval and time() - self.init_time > 2:
-            self.spawn_mob(session)
-            self.last_mob_spawn = time()
-        for e in self.entities:
+        if not self.paused:
+            # game logics
+            self.pause_msg_box_displayed = False
+            display.fill((0, 0, 0))
+            display.blit(self.bg, (0, 0))
+            self.player.update(display, self.entities, session, self)
+            if time() - self.last_mob_spawn > self.mob_spawn_interval and time() - self.init_time > 2:
+                self.spawn_mob(session)
+                self.last_mob_spawn = time()
+            for e in self.entities:
 
-            if type(e).__name__ == "PlayerBullet":
-                e.update(self.entities)
-                if e.alpha <= 0 and e.exploded:
-                    self.entities.remove(e)
-                else:
-                    e.rect.x += self.delta_screen_offset
-                    e.render(display, self.entities)
-            elif type(e).__name__ == "Enemy":
-                e.update(self, display)
-                e.rect.left += self.delta_screen_offset
-                #e.rect.left = e.init_coord[0]
-                e.check_collision_with_bullet([x for x in self.entities if type(x).__name__ == "PlayerBullet"])
-                if e.hp <= 0:
-                    self.entities.remove(e)
-                e.render(display)
-            elif type(e).__name__ == "Dripstone":
-                e.update(session, self)
-                e.rect.left += self.delta_screen_offset
-                if e.rect.top <= get_window_size()[1]:
+                if type(e).__name__ == "PlayerBullet":
+                    e.update(self.entities)
+                    if e.alpha <= 0 and e.exploded:
+                        self.entities.remove(e)
+                    else:
+                        e.rect.x += self.delta_screen_offset
+                        e.render(display, self.entities)
+                elif type(e).__name__ == "Enemy":
+                    e.update(self, display)
+                    e.rect.left += self.delta_screen_offset
+                    #e.rect.left = e.init_coord[0]
+                    e.check_collision_with_bullet([x for x in self.entities if type(x).__name__ == "PlayerBullet"])
+                    if e.hp <= 0:
+                        self.entities.remove(e)
                     e.render(display)
+                elif type(e).__name__ == "Dripstone":
+                    e.update(session, self)
+                    e.rect.left += self.delta_screen_offset
+                    if e.rect.top <= get_window_size()[1]:
+                        e.render(display)
+                    else:
+                        self.entities.remove(e)
+
                 else:
-                    self.entities.remove(e)
+                    e.rect.left = e.init_coord[0] + self.abs_screen_offset
+                    e.render(display)
 
-            else:
-                e.rect.left = e.init_coord[0] + self.abs_screen_offset
+            for e in event.get((EMIT_TRAIL_PARTICLE, PLAYER_DIED)):
+                if e.type == EMIT_TRAIL_PARTICLE:
+                    self.effects.append(
+                        TrailFx(
+                            self.player.rect.x + self.player.particle_relative_position[0],
+                            self.player.rect.y + self.player.particle_relative_position[1],
+                            session,
+                            self.player.dx,
+                        )
+                    )
+                elif e.type == PLAYER_DIED:
+
+                    if not self.retry_prompt:
+                        ret_val = ctypes.windll.user32.MessageBoxW(
+                            0,
+                            "Your character is damaged. Retry?",
+                            "Mission failed",
+                            0x04 | 0x10,
+                        )
+                        self.retry_prompt = True
+                    if ret_val == 6:
+                        event.post(event.Event(Items[self.level.name].value))
+                    elif ret_val == 7:
+                        event.post(event.Event(GO_TO_LV_SELECTION))
+
+            for e in self.effects:
+                e.update()
+                e.x += self.delta_screen_offset
                 e.render(display)
+                if e.alpha <= 0:
+                    self.effects.remove(e)
 
-        for e in event.get((EMIT_TRAIL_PARTICLE, PLAYER_DIED)):
-            if e.type == EMIT_TRAIL_PARTICLE:
-                self.effects.append(
-                    TrailFx(
-                        self.player.rect.x + self.player.particle_relative_position[0],
-                        self.player.rect.y + self.player.particle_relative_position[1],
-                        session,
-                        self.player.dx,
-                    )
-                )
-            elif e.type == PLAYER_DIED:
+            f = self.font.render(f"{key.get_pressed()[K_ESCAPE]}", True, (255, 255, 255))
+            display.blit(f, (10, 10))
 
-                if not self.retry_prompt:
-                    ret_val = ctypes.windll.user32.MessageBoxW(
-                        0,
-                        "Your character is damaged. Retry?",
-                        "Mission failed",
-                        0x04 | 0x10,
-                    )
-                    self.retry_prompt = True
-                if ret_val == 6:
-                    event.post(event.Event(Items[self.level.name].value))
-                elif ret_val == 7:
-                    event.post(event.Event(GO_TO_LV_SELECTION))
+            self.inventory_pane.render(session, display, self.player.inventory)
+            self.hp_pane.render(self.player, display)
+            self.perk_timer_pane.render(self.player, display)
+            self.pause_check()
+            self.player.render(display)
+            self.inventory_check(session)
+        else:
+            ret_val = ctypes.windll.user32.MessageBoxW(0, "The game is paused. \nWanna return to Level Menu? You'll lose any progress made in this level.", "Game Paused", 0x04 | 0x30)
+            if ret_val == 6:
+                event.post(event.Event(GO_TO_LV_SELECTION))
+            else:
+                self.paused = False
+                ret_val = None
+                
 
-
-        for e in self.effects:
-            e.update()
-            e.x += self.delta_screen_offset
-            e.render(display)
-            if e.alpha <= 0:
-                self.effects.remove(e)
-
-        f = self.font.render(f"{self.abs_screen_offset}", True, (255, 255, 255))
-        display.blit(f, (10, 10))
-
-        self.inventory_pane.render(session, display, self.player.inventory)
-        self.hp_pane.render(self.player, display)
-        self.perk_timer_pane.render(self.player, display)
-
-        self.player.render(display)
-        self.inventory_check(session)
+    def pause_check(self):
+        if key.get_pressed()[K_ESCAPE]:
+            self.paused = True
 
     def inventory_check(self, session: Session):
         inventory_check_result = []
@@ -303,6 +320,7 @@ class World:
             event.post(event.Event(MISSION_COMPLETED))
             session.add_item(Items[self.level.name])
             session.update_savefile()
+
 
 
     def update_world_offset(self, delta):

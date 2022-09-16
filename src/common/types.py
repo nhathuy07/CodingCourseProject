@@ -74,6 +74,7 @@ class Projectiles(Enum):
 
 class Liquid(Enum):
     Acid = 40
+    Lava = 41
 
 
 # States
@@ -96,3 +97,8 @@ class MobState(Enum):
     Idle = "idle"
     Attacking = "attacking"
     Hurt = "hurt"
+
+class BossState(Enum):
+    Idle = "idle"
+    Growling = "growling"
+    SpittingBullet = "spitting_bullet"

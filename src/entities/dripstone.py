@@ -29,7 +29,7 @@ class Dripstone():
         self.falling_started = 0
         self.last_particle_spawn = 0
         self.falling_interval = 0.08
-        self.waiting_time = randint(2, 5) / 10
+        self.waiting_time = randint(2, 5) / 10 + 0.3
         
 
     def update(self, session: Session, world):
@@ -38,7 +38,7 @@ class Dripstone():
                 self.falling = True
                 self.falling_started = time()
         elif self.falling:
-            if time() - self.falling_started <= self.waiting_time and time() - self.last_particle_spawn >= self.falling_interval:
+            if self.waiting_time - 0.3 < time() - self.falling_started <= self.waiting_time and time() - self.last_particle_spawn >= self.falling_interval:
                 world.effects.append(DripstoneFallingFx(session, self))
                 self.last_particle_spawn = time()
             elif time() - self.falling_started >= 0.43:

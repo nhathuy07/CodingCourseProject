@@ -14,13 +14,13 @@
             "YELLOW": 4,
             "GREEN": 3
         },
-        "AvailableMobType": ["Type1, Type2"]
+        "AvailableMobType": ["Type1", "Type2"]
     },
     "COMM_SYSTEM": {
         "Scheme": "LavaCave",
         "Items": {
             "GREY": 4,
-            "YELLOW": 4,
+            "YELLOW": 3,
             "GREEN": 5,
             "PURPLE": 3
         },

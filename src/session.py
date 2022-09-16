@@ -7,7 +7,7 @@ from pygame import Surface, rect
 from common import types
 from common.config import DISPLAY_SCALING
 from common.paths import ASSETS_PATH
-from common.types import Ground, Items, MobState, Mobs, PlayerState, Projectiles, Scheme
+from common.types import BossState, Ground, Items, MobState, Mobs, PlayerState, Projectiles, Scheme
 from common.utils import load_img
 
 
@@ -182,6 +182,16 @@ class Session:
                     self.mobs[p][m] = list(
                         map(load_img, Path(self.mobs_dir / p.lower() / m.lower()).glob("*"))
                     )
+
+        # load boss
+        self.boss_sprite_dir = self.mobs_dir / "Boss"
+        self.boss_sprite = {}
+        for i in ("Original", "Hurt"):
+            for p in BossState._member_names_:
+                self.boss_sprite[p] = {}
+                self.boss_sprite[p][i] = load_img(self.boss_sprite_dir / i / f"{p}.png")
+            
+        
 
     def load_or_create_savefile(self):
         import json

@@ -24,6 +24,7 @@ from pygame import (
     K_SPACE,
     KMOD_SHIFT,
     transform,
+    key
 )
 
 
@@ -95,6 +96,8 @@ class Player():
 
         self.gun_perk_expire_time = 0
         self.gun_perk_timer_pane = None
+
+        self.has_jumped = False
 
     def clear_event(self):
         # clear events to prevent undesirable behaviors caused by clicking A/D or Left/Right on preload screen
@@ -284,26 +287,29 @@ class Player():
     def update(self, display: Surface, entities, session: Session, world):
 
         # grab user input
-        for e in event.get((KEYUP, KEYDOWN)):
-            if e.type == KEYDOWN:
-                if e.key == K_a or e.key == K_LEFT:
-                    self.moving_left = True
-                    self.moving_right = False
-                    self.image_flipped = True
-                elif e.key == K_d or e.key == K_RIGHT:
-                    self.moving_left = False
-                    self.moving_right = True
-                    self.image_flipped = False
-                elif e.key == K_SPACE:
-                    self.jump()
-                elif e.key == K_f:
-                    self.shoot(entities, session)
+        pressed_keys = key.get_pressed()
+        if pressed_keys[K_a] or pressed_keys[K_LEFT]:
+            self.moving_left = True
+            self.moving_right = False
+            self.image_flipped = True
+        elif pressed_keys[K_d] or pressed_keys[K_RIGHT]:
+            self.moving_left = False
+            self.moving_right = True
+            self.image_flipped = False
+        
+        if pressed_keys[K_SPACE] and not self.has_jumped:
+            self.jump()
+            self.has_jumped = True
+        if pressed_keys[K_f]:
+            self.shoot(entities, session)
 
-            elif e.type == KEYUP:
-                if e.key == K_LEFT or e.key == K_a:
-                    self.moving_left = False
-                elif e.key == K_RIGHT or e.key == K_d:
-                    self.moving_right = False
+
+        if not pressed_keys[K_a] and not pressed_keys[K_LEFT]:
+            self.moving_left = False
+        if not pressed_keys[K_d] and not pressed_keys[K_RIGHT]:
+            self.moving_right = False
+        if not pressed_keys[K_SPACE]:
+            self.has_jumped = False
 
         if self.landed:
             self.dy = 0

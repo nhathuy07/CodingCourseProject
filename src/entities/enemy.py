@@ -81,11 +81,11 @@ class Enemy:
                 
         self.init_coord = [self.rect.x, self.rect.y]
 
-        if time() - self.last_hurt_time > 0.4 and self.state == MobState.Hurt:
-            self.state = MobState.Idle
+        # if time() - self.last_hurt_time > 0.4 and self.state == MobState.Hurt:
+        #     self.state = MobState.Idle
 
         if self.state == MobState.Attacking and not self.attack_anim_finished:
-            if time() - self.last_attack_time >= 0.1 * self.attack_anim_frame:
+            if time() - self.last_attack_time >= 0.055 * self.attack_anim_frame:
                 self.attack_anim_frame += 1
                 if self.attack_anim_frame > 2:
                     self.state = MobState.Idle

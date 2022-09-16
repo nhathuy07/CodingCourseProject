@@ -48,7 +48,7 @@ class EnemyConfig:
     Dx = 7
     Dy = 6
     Damage = 6
-    Hp = 25
+    Hp = 20
     LocateTargetDelay = 0.6
     LocateTargetError = 10
     WeaponCooldown = 0.4
@@ -56,10 +56,10 @@ class EnemyConfig:
 
 @dataclass
 class EnemyType2Config:
-    Dx = 13.5
-    Dy = 16.5
+    Dx = 9
+    Dy = 8
     Damage = 10
-    Hp = 40
+    Hp = 35
     LocateTargetDelay = 0.25
     LocateTargetError = 6
     WeaponCooldown = 0.2
