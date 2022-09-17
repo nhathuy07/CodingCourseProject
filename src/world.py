@@ -32,8 +32,8 @@ from entities import collectible, liquid, player
 from pygame import font, event, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, KEYDOWN, KEYUP, K_ESCAPE, key
 import pymsgbox
 from visual_fx.trail_fx import TrailFx
-
-
+from pygame import mixer
+mixer.init()
 class World:
     def __init__(self, session: Session, level: Levels) -> None:
         self.level = level
@@ -41,6 +41,7 @@ class World:
         self.entities_map = session.level_data[self.level.name]["MapData"]
         self.goal = session.level_data[self.level.name]["Items"]
         self.availableMob = session.level_data[self.level.name]["AvailableMobType"]
+        self.optionalFeatures = session.level_data[self.level.name]["OptionalFeature"]
         self.entities = []
         self.effects = []
         self.player = player.Player(session)
@@ -68,6 +69,10 @@ class World:
         )
 
         self.retry_prompt = False
+        
+        # load background music
+        mixer.music.load(session.sfx_path / "game.wav")
+        mixer.music.play()
 
         event.set_allowed(
             (
@@ -241,6 +246,8 @@ class World:
                     #e.rect.left = e.init_coord[0]
                     e.check_collision_with_bullet([x for x in self.entities if type(x).__name__ == "PlayerBullet"])
                     if e.hp <= 0:
+                        if e.mob_type == Mobs.Type3:
+                            self.entities.append(collectible.Collectible(Collectibles.ENERGY_BAR, session, e.rect.x, e.rect.y))
                         self.entities.remove(e)
                     e.render(display)
                 elif type(e).__name__ == "Dripstone":
@@ -250,9 +257,8 @@ class World:
                         e.render(display)
                     else:
                         self.entities.remove(e)
-
                 else:
-                    e.rect.left = e.init_coord[0] + self.abs_screen_offset
+                    e.rect.left = self.abs_screen_offset + e.init_coord[0]
                     e.render(display)
 
             for e in event.get((EMIT_TRAIL_PARTICLE, PLAYER_DIED)):
@@ -266,7 +272,9 @@ class World:
                         )
                     )
                 elif e.type == PLAYER_DIED:
-
+                    mixer.music.stop()
+                    mixer.music.unload()
+                    session.sfx["death.wav"].play()
                     if not self.retry_prompt:
                         ret_val = ctypes.windll.user32.MessageBoxW(
                             0,
@@ -289,21 +297,23 @@ class World:
 
             f = self.font.render(f"{key.get_pressed()[K_ESCAPE]}", True, (255, 255, 255))
             display.blit(f, (10, 10))
-
+            self.optional_features(display, session)
             self.inventory_pane.render(session, display, self.player.inventory)
             self.hp_pane.render(self.player, display)
             self.perk_timer_pane.render(self.player, display)
             self.pause_check()
             self.player.render(display)
             self.inventory_check(session)
+            
         else:
             ret_val = ctypes.windll.user32.MessageBoxW(0, "The game is paused. \nWanna return to Level Menu? You'll lose any progress made in this level.", "Game Paused", 0x04 | 0x30)
             if ret_val == 6:
                 event.post(event.Event(GO_TO_LV_SELECTION))
+                mixer.music.stop()
+                mixer.music.unload()
             else:
                 self.paused = False
                 ret_val = None
-                
 
     def pause_check(self):
         if key.get_pressed()[K_ESCAPE]:
@@ -316,7 +326,9 @@ class World:
                 inventory_check_result.append(True)
             else:
                 inventory_check_result.append(False)
-        if False not in inventory_check_result and len(inventory_check_result) != 0:
+        if False not in inventory_check_result and len(inventory_check_result) == len(self.goal):
+            mixer.music.stop()
+            mixer.music.unload()
             event.post(event.Event(MISSION_COMPLETED))
             session.add_item(Items[self.level.name])
             session.update_savefile()
@@ -341,15 +353,15 @@ class World:
 
     def spawn_mob(self, session: Session):
         e = choice(self.availableMob)
-        if self.abs_screen_offset > -112:
+        if self.abs_screen_offset > -112 and e != "Type3":
             spawn_loc_x = get_window_size()[0]
             side = 1
-        elif self.abs_screen_offset < self.min_abs_screen_offset + 70:
+        elif self.abs_screen_offset < self.min_abs_screen_offset + 70 and e != "Type3":
             spawn_loc_x = -300
             side = 0
         else:
-            spawn_loc_x = randint(0, 1)
-            if spawn_loc_x == 0:
+            spawn_option = randint(0, 1)
+            if spawn_option == 0:
                 spawn_loc_x = -300
             else:
                 spawn_loc_x = get_window_size()[0]
@@ -360,7 +372,7 @@ class World:
                     session,
                     Mobs["Type1"],
                     spawn_loc_x,
-                    0,
+                    randint(300, int(get_window_size()[1] - 300)),
                     side,
                     EnemyConfig.Dx,
                     EnemyConfig.Dy,
@@ -377,7 +389,7 @@ class World:
                     session,
                     Mobs["Type2"],
                     spawn_loc_x,
-                    0,
+                    randint(100, int(get_window_size()[1] - 100)),
                     side,
                     EnemyType2Config.Dx,
                     EnemyType2Config.Dy,
@@ -394,7 +406,7 @@ class World:
                     session,
                     Mobs["Type3"],
                     spawn_loc_x,
-                    0,
+                    randint(100, int(get_window_size()[1] - 100)),
                     side,
                     EnemyType3Config.Dx,
                     EnemyType3Config.Dy,
@@ -403,5 +415,12 @@ class World:
                     EnemyType3Config.LocateTargetDelay,
                     EnemyType3Config.LocateTargetError,
                     EnemyType3Config.WeaponCooldown,
+                    
                 )
             )
+    
+    def optional_features(self, display, session: Session):
+        if "ReducedSight" in self.optionalFeatures:
+            
+            session.REDUCED_SIGHT_RECT.center = self.player.rect.center
+            display.blit(session.REDUCED_SIGHT, session.REDUCED_SIGHT_RECT.topleft)

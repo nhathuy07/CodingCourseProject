@@ -1,45 +1,74 @@
 import json, pygame
+
 from common import events
 from common.config import DISPLAY_SCALING, get_window_size
+from common.paths import ASSETS_PATH
 
 from common.utils import drawText
 from session import Session
 
 
-class Intro:
-    def __init__(self):
+class Intro():
+    def __init__(self, pre_bossfight = False):
         from pathlib import Path
         from common import paths
         from common import utils
+        pygame.mixer.init()
+        self.alpha = 0
 
         self.dialogue_path = paths.DATA_PATH / "dialogues.json"
-        self.background_path = paths.ASSETS_PATH / "background"
-        self.intro_scenes_path = paths.ASSETS_PATH / "intro_scenes"
-        self.intro_scenes = tuple(
-            map(utils.load_img, Path(self.intro_scenes_path).glob("*.png"))
-        )
-        self.alpha = 0
-        with open(self.dialogue_path) as r:
-            self.intro_lines = json.load(r)["intro_story"]
+        # load intro for the beginning of the game
+        if not pre_bossfight:
+            
+            self.background_path = paths.ASSETS_PATH / "background"
+            self.intro_scenes_path = paths.ASSETS_PATH / "intro_scenes"
+            self.intro_scenes = tuple(
+                map(utils.load_img, Path(self.intro_scenes_path).glob("*.png"))
+            )
+            with open(self.dialogue_path) as r:
+                data = json.load(r)
+                self.intro_lines = data["intro_story"]
+                self.sound_sequence = data["intro_sound_sequence"]
+        else:
+            # load intro for boss level
+            self.intro_scenes_path = paths.ASSETS_PATH / "preboss_scenes"
+            self.intro_scenes = tuple(
+                map(utils.load_img, Path(self.intro_scenes_path).glob("*.png"))
+            )
+            with open(self.dialogue_path) as r:
+                data = json.load(r)
+                self.intro_lines = data["boss_fight"]["intro"]
+                self.sound_sequence = data["boss_fight"]["audio_sequence"]
+
         self.page_count = len(self.intro_lines)
         self.current_page = 0
+        self.current_sound = None
+        self.sound_played = False
 
     def jumpto(self, page):
         self.current_page = page
 
     def flip(self):
+        self.sound_played = False
+        self.current_sound.stop()
         self.alpha = 0
         from common.events import PLAY
 
         if self.current_page < self.page_count - 1:
             self.current_page += 1
         else:
-            pygame.event.post(pygame.event.Event(PLAY))
+            self.current_sound.stop()
+            pygame.event.post(pygame.event.Event(events.INTRODUCTION_DIALOGUE))
+            
 
     def update(self, display: pygame.surface.Surface, session: Session):
         from common import config
+        if not self.sound_played:
+            self.current_sound = session.sfx[self.sound_sequence[self.current_page]]
+            self.current_sound.play()
+            self.sound_played = True
 
-        if self.current_page < self.page_count - 1:
+        if self.current_page <= self.page_count - 1:
             # draw image
             if self.current_page == 0:
                 display.fill((0, 0, 0))
@@ -72,5 +101,4 @@ class Intro:
                 textRect,
                 pygame.font.Font(config.FONT[0], config.FONT[1]),
             )
-        else:
-            pygame.event.post(pygame.event.Event(events.INTRODUCTION_DIALOGUE))
+

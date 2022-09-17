@@ -3,7 +3,7 @@ from time import time
 from typing import Any, List, Optional
 from common.config import DISPLAY_SCALING, BulletConfig, PlayerConfig, get_window_size
 from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, PLAYER_DIED, SHOOT
-from common.types import Collectibles, Ground, PlayerState
+from common.types import Collectibles, Ground, Ores, PlayerState
 from entities import bullet
 from entities.collectible import Collectible
 from session import Session
@@ -98,6 +98,14 @@ class Player():
         self.gun_perk_timer_pane = None
 
         self.has_jumped = False
+        
+        self.moving_sound_played = False
+
+        # extras
+        self.hurt_sound = session.sfx["hurt.wav"]
+        self.pickup_sound = session.sfx["pickup.wav"]
+        self.death_sound = session.sfx["death.wav"]
+        self.perk_sound = session.sfx["powerup.wav"]
 
     def clear_event(self):
         # clear events to prevent undesirable behaviors caused by clicking A/D or Left/Right on preload screen
@@ -109,23 +117,27 @@ class Player():
             self.dy = -self.jumping_speed
 
     def collect_item(self, entities: List[Collectible]):
+        
         for c in entities:
             # grab all entities of type ground
             if c.rect.colliderect(self.rect) and type(c).__name__ == "Collectible":
-                if c.collectible_type in (Collectibles.GREY, Collectibles.GREEN, Collectibles.PURPLE, Collectibles.YELLOW):
+                if c.collectible_type in Ores:
                     if c.collectible_type.name in self.inventory:
                         self.inventory[c.collectible_type.name] += 1
                     else:
                         self.inventory[c.collectible_type.name] = 1
                     entities.remove(c)
+                    self.pickup_sound.play()
                     event.post(event.Event(ITEM_COLLECTED))
                 elif c.collectible_type == Collectibles.WEAPON_SUPERCHARGER:
-                    self.gun_perk_expire_time = time() + PlayerConfig.PerkDuration
+                    self.gun_perk_expire_time = PlayerConfig.PerkDuration + time()
+                    self.perk_sound.play()
                     entities.remove(c)
 
-    def shoot(self, entities, session):
-        if time() < self.gun_perk_expire_time:
-            self.damage = BulletConfig.Damage * 1.5
+    def shoot(self, entities, session: Session):
+        session.sfx["blaster.wav"].play()
+        if time() <= self.gun_perk_expire_time:
+            self.damage = BulletConfig.Damage * 2
         else:
             self.damage = BulletConfig.Damage
         
@@ -173,7 +185,7 @@ class Player():
                 )
                 and type(c).__name__ == "Liquid"
             ):
-                self.inflict_damage(40, 0.1, entities=entities, display=display)
+                self.inflict_damage(40, 0.1, entities=entities)
                 self.terminal_velocity = 3
 
     def update_speed_based_on_collision(self, terrain: List[Ground]):
@@ -263,8 +275,9 @@ class Player():
         interval: float,
         knockback: float = 0,
         entities=None,
-        display=None,
+        #display=None,
     ):
+        self.hurt_sound.play()
         if time() - self.last_damaged_time >= interval:
             if not self.image_flipped:
                 self.dx = -knockback
@@ -310,6 +323,17 @@ class Player():
             self.moving_right = False
         if not pressed_keys[K_SPACE]:
             self.has_jumped = False
+
+        # play moving sound
+        if self.moving_left or self.moving_right:
+            if not self.moving_sound_played:
+                session.sfx["robot_movement.wav"].play()
+                self.moving_sound_played = True
+        
+        # stop playing moving sound when robot isn't moved in any directions
+        if not self.moving_left and not self.moving_right:
+            session.sfx["robot_movement.wav"].stop()
+            self.moving_sound_played = False
 
         if self.landed:
             self.dy = 0

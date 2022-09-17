@@ -5,7 +5,8 @@
             "GREY": 7,
             "YELLOW": 4
         },
-        "AvailableMobType": ["Type1"]
+        "AvailableMobType": ["Type1"],
+        "OptionalFeature": []
     },
     "THRUSTER": {
         "Scheme": "BlueCave",
@@ -14,7 +15,8 @@
             "YELLOW": 4,
             "GREEN": 3
         },
-        "AvailableMobType": ["Type1", "Type2"]
+        "AvailableMobType": ["Type1", "Type2"],
+        "OptionalFeature": []
     },
     "COMM_SYSTEM": {
         "Scheme": "LavaCave",
@@ -24,13 +26,15 @@
             "GREEN": 5,
             "PURPLE": 3
         },
-        "AvailableMobType": ["Type2"]
+        "AvailableMobType": ["Type2"],
+        "OptionalFeature": []
     },
     "ENERGY_CORE": {
         "Scheme": "DarkCave",
         "Items": {
             "ENERGY_BAR": 8
         },
-        "AvailableMobType": ["Type3"]
+        "AvailableMobType": ["Type3"],
+        "OptionalFeature": ["ReducedSight"]
     }
 }

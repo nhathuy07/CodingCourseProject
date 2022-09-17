@@ -8,7 +8,12 @@ class MissionCompletedScr():
         event.set_allowed((GO_TO_LV_SELECTION, MOUSEBUTTONDOWN))
         self.image = session.MISSION_COMPLETED_SCR
         self.alpha = 0
+        self.sound = session.sfx["mission_completed.wav"]
+        self.sound_played = False
     def update(self, display):
+        if not self.sound_played:
+            self.sound.play()
+            self.sound_played = True
         for e in event.get(MOUSEBUTTONDOWN):
             if e.type == MOUSEBUTTONDOWN:
                 event.post(event.Event(GO_TO_LV_SELECTION))

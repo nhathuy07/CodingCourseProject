@@ -6,6 +6,13 @@
     "Fortunately, Mark managed to land on a nearby planet. Now, he's seeking for help to repair his severely damaged spacecraft.",
     "After a while, Mark found a vehicle rescuer named Roger."
   ],
+  "intro_sound_sequence": [
+    "spaceship_launch.wav",
+    "spaceship_crusing.wav",
+    "explosion.wav",
+    "space_ambience_sound.wav",
+    "robot_movement.wav"
+  ],
   "dialogues": [
     [
       {
@@ -56,20 +63,19 @@
         "speaker": "Roger",
         "line": "You're welcome!"
       }
+    ],
+    [
+      {
+        "speaker": "Monster",
+        "line": "How dare you killed my people! I won't let you get away with that!"
+      }
     ]
   ],
-  "boss_fight": [
-    {
-      "intro": ["With Roger's help, Mark is confident that he can contiue his journey.", "But he's seriously wrong! An angry giant is blocking his way, ready to smash him to pieces."]
-    },
-    {
-      "dialogue": [
-        {
-          "speaker": "Monster",
-          "line": "How dare you killed my people! I won't let you get away with that!"
-        }
-      ]
-    }
-  ]
+  "boss_fight": {
+      "intro": ["With Roger's help, Mark is confident that he can contiue his journey.", "But he's seriously wrong! An angry giant is blocking his way, ready to smash him into pieces."],
+      "audio_sequence": ["spaceship_launch.wav", "monster_growling.wav"]
+    
+    
+  }
 
 }

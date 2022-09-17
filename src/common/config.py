@@ -7,7 +7,7 @@ display.set_mode()
 
 WINDOW_SIZE = (1558, 961)
 DISPLAY_SCALING = 0.8
-TRANSISTION_SPEED = 18
+TRANSISTION_SPEED = 13
 
 
 def get_window_size(display_scaling=DISPLAY_SCALING):
@@ -67,12 +67,12 @@ class EnemyType2Config:
 
 @dataclass
 class EnemyType3Config:
-    Dx = 32
-    Dy = 14
-    Damage = 15
-    Hp = 45
-    LocateTargetDelay = 0.3
-    LocateTargetError = 5
+    Dx =  8
+    Dy = 5
+    Damage = 12
+    Hp = 40
+    LocateTargetDelay = 0.4
+    LocateTargetError = 40
     WeaponCooldown = 0.18
 
 

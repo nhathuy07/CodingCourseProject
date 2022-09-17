@@ -19,11 +19,13 @@ class Enemy:
         locate_target_delay,
         locate_target_error,
         weapon_cooldown,
+        inverse_y = False,
     ) -> None:
         self.side = side
         self.x = x
         self.y = randint(250, int(get_window_size()[1]) - 250)
         self.init_coord = [self.x, self.y]
+        self.mob_type = mob_type
         self.sprites = session.mobs[mob_type.name]
         self.state = MobState.Idle
         self.rect = self.sprites[self.state.name][0].get_rect()
@@ -36,6 +38,7 @@ class Enemy:
             self.rect.topleft = (self.x + 53 * DISPLAY_SCALING, self.y)
             self.rect.width -= 100 * DISPLAY_SCALING
         self.init_dx = init_dx if self.side == 0 else -init_dx
+        
         self.init_dy = init_dy
         self.damage = damage
         self.hp = hp
@@ -56,6 +59,7 @@ class Enemy:
         self.last_loc_change = 0
 
         self.target_delta_y = 0
+        self.inverse_y = inverse_y
     def update(self, world, display):
         # grab player's location every X seconds
         if time() - self.last_player_location_call >= self.locate_target_delay:
@@ -64,10 +68,13 @@ class Enemy:
             self.last_player_location_call = time()
 
         if time() - self.last_loc_change > 0.01:
+            current_speed = randint(self.init_dy - 2, self.init_dy + 2)
+            if self.inverse_y:
+                current_speed = -current_speed
             if self.rect.y > self.player_location[1]:
-                self.rect.y -= randint(self.init_dy - 2, self.init_dy + 2)
+                self.rect.y -= current_speed
             elif self.rect.y < self.player_location[1]:
-                self.rect.y += randint(self.init_dy - 2, self.init_dy + 2)
+                self.rect.y += current_speed
             self.last_loc_change = time()
 
 
@@ -94,8 +101,8 @@ class Enemy:
                     self.state = MobState.Idle
 
     def attack(self, world, display):
-        self.state = MobState.Attacking
-        world.player.inflict_damage(self.damage, self.weapon_cooldown, 0, world.entities, display)
+        self.state = MobState.Attacking 
+        world.player.inflict_damage(self.damage, self.weapon_cooldown, entities=world.entities)
         self.attack_anim_frame = 0
         self.last_attack_time = time()
         

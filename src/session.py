@@ -2,7 +2,7 @@ import csv
 import os
 from typing import Dict
 
-from pygame import Surface, rect
+from pygame import Surface, rect, mixer
 
 from common import types
 from common.config import DISPLAY_SCALING
@@ -10,6 +10,7 @@ from common.paths import ASSETS_PATH
 from common.types import BossState, Ground, Items, MobState, Mobs, PlayerState, Projectiles, Scheme
 from common.utils import load_img
 
+mixer.init()
 
 class Session:
     def __init__(self):
@@ -73,6 +74,7 @@ class Session:
             map(utils.load_img, Path(self.dialogue_scenes_path).glob("*.png"))
         )
 
+        # load level data
         self.map_path = paths.DATA_PATH / "levels"
         self.level_data_dir = paths.DATA_PATH / "level_data.json"
         with open(self.level_data_dir, "r") as levelDataFileIOWrapper:
@@ -84,9 +86,10 @@ class Session:
                     csvreader = csv.reader(o)
                     self.level_data[key]["MapData"] = tuple(csvreader)
 
+        # load level menu background
         self.lv_selection_bg = utils.load_img(self.lv_selection_bg_dir)
 
-
+        # load collectibles
         self.collectible_dir = paths.ASSETS_PATH / "items" / "collectibles"
         self.collectibles: Dict[str, Dict[str, Surface]] = {}
         for c in types.Collectibles:
@@ -108,6 +111,7 @@ class Session:
             else:
                 self.collectibles[c.name]["Full"] = None
 
+        # load ground textures
         self.ground_texture_dir = paths.ASSETS_PATH / "ground"
         self.ground_texture = {}
         for s in Scheme:
@@ -117,16 +121,19 @@ class Session:
                     self.ground_texture_dir / str(s.value) / f"{variation.lower()}.png"
                 )
 
+        # load liquid textures
         self.liquid_texture_dir = paths.ASSETS_PATH / "liquid"
         self.liquid_texture = {}
         for l in self.liquid_texture_dir.glob("*.png"):
             self.liquid_texture[l.name.removesuffix(".png")] = load_img(l)
 
+        # load level backgrounds
         self.level_bg_dir = paths.ASSETS_PATH / "background" / "levels"
         self.background = tuple(
             map(utils.load_img, Path(self.level_bg_dir).glob("*.png"))
         )
 
+        # Load player sprite
         self.player_sprite = {}
         for sprite in PlayerState:
             self.player_sprite[sprite.name] = load_img(
@@ -162,6 +169,9 @@ class Session:
         # Dripstone dropping effect
         self.DRIPSTONE_FALLING = load_img(ASSETS_PATH / "fx" / "dripstone_falling.png")
 
+        # Reduced sight effect
+        self.REDUCED_SIGHT = load_img(ASSETS_PATH / "fx" / "reduced_sight.png")
+        self.REDUCED_SIGHT_RECT = self.REDUCED_SIGHT.get_rect()
         # Mission Completed
         self.MISSION_COMPLETED_SCR = load_img(ASSETS_PATH / "icons" / "missionCompletedScreen.png")
         # load projectiles
@@ -189,9 +199,13 @@ class Session:
         for i in ("Original", "Hurt"):
             for p in BossState._member_names_:
                 self.boss_sprite[p] = {}
-                self.boss_sprite[p][i] = load_img(self.boss_sprite_dir / i / f"{p}.png")
+                self.boss_sprite[p][i] = load_img(self.boss_sprite_dir / i / f"{p}.png") # syntax: self.boss_sprite[state][is_hurt]
             
-        
+        ## AUDIO
+        self.sfx_path = ASSETS_PATH / "sfx"
+        self.sfx = {}
+        for i in Path(self.sfx_path).glob("*.wav"):
+            self.sfx[i.name] = mixer.Sound(i)
 
     def load_or_create_savefile(self):
         import json
@@ -242,3 +256,14 @@ class Session:
 
     def get_lvl(self):
         return self.playerData["current_lvl"]
+
+    def is_newgame(self):
+        if len(self.playerData["earned_items"]) == 0:
+            return True
+        else:
+            return False
+    def base_level_completed(self):
+        if len(self.playerData["earned_items"]) >= 4:
+            return True
+        else:
+            return False

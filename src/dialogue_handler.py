@@ -5,7 +5,7 @@ from session import Session
 
 
 class Dialogue:
-    def __init__(self, session: Session, pg_range: tuple[int, int]) -> None:
+    def __init__(self, session: Session, pg_range: tuple[int, int], pre_bossfight = False) -> None:
         from common import paths
         from pathlib import Path
 
@@ -19,9 +19,16 @@ class Dialogue:
         )
         self.alpha = -255
         self.next_section_ev_posted = False
+        self.set_section(self.range[0])
 
+        self.current_sound = None
+        self.sound_played = False
+
+        self.pre_bossfight = pre_bossfight
     def next_line(self):
         self.line += 1
+        self.current_sound.stop()
+        self.sound_played = False
 
     def set_section(self, s: int):
         self.section = s
@@ -31,12 +38,18 @@ class Dialogue:
 
     def update(self, display, session: Session):
 
+
         if self.line < len(self.dialog_list[self.section]):
             from common import config
 
             display.fill((0, 0, 0))
 
             section_data = self.dialog_list[self.section][self.line]
+
+            if not self.sound_played:
+                self.current_sound = session.sfx[f"{section_data['speaker']}.wav".lower()]
+                self.current_sound.play()
+                self.sound_played = True
 
             if -255 <= self.alpha < 0:
                 current_bg = (
@@ -98,5 +111,7 @@ class Dialogue:
         elif self.section < self.range[1]:
             self.set_section(self.section + 1)
 
-        else:
+        elif not self.pre_bossfight:
             pygame.event.post(pygame.event.Event(events.GO_TO_LV_SELECTION))
+        elif self.pre_bossfight:
+            pygame.event.post(pygame.event.Event(events.BOSS_LVL_INTRO))

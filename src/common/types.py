@@ -3,18 +3,18 @@ from pygame import USEREVENT
 
 
 class Items(Enum):
-    SHELL = USEREVENT + 20
-    THRUSTER = USEREVENT + 21
-    COMM_SYSTEM = USEREVENT + 22
-    ENERGY_CORE = USEREVENT + 23
+    SHELL = USEREVENT + 120
+    THRUSTER = USEREVENT + 121
+    COMM_SYSTEM = USEREVENT + 122
+    ENERGY_CORE = USEREVENT + 123
 
 
 class Levels(Enum):
-    SHELL = USEREVENT + 40
-    THRUSTER = USEREVENT + 41
-    COMM_SYSTEM = USEREVENT + 42
-    ENERGY_CORE = USEREVENT + 43
-    BOSS = USEREVENT + 44
+    SHELL = USEREVENT + 140
+    THRUSTER = USEREVENT + 141
+    COMM_SYSTEM = USEREVENT + 142
+    ENERGY_CORE = USEREVENT + 143
+    BOSS = USEREVENT + 144
 
 
 class MenuOption(Enum):
@@ -32,7 +32,7 @@ class Collectibles(Enum):
     ENERGY_BAR = 14
     WEAPON_SUPERCHARGER = 15
 
-Ores = (Collectibles.GREEN, Collectibles.GREY, Collectibles.PURPLE, Collectibles.YELLOW)
+Ores = (Collectibles.GREEN, Collectibles.GREY, Collectibles.PURPLE, Collectibles.YELLOW, Collectibles.ENERGY_BAR)
 
 class Ground(Enum):
     # Base = -1
@@ -69,12 +69,14 @@ class Mobs(Enum):
 class Projectiles(Enum):
     # EnemyBullet = 30
     Dripstone = 31
-    PlayerBullet = 32
+    Dripstone2 = 32
+    PlayerBullet = 33
 
 
 class Liquid(Enum):
     Acid = 40
     Lava = 41
+
 
 
 # States
@@ -102,3 +104,7 @@ class BossState(Enum):
     Idle = "idle"
     Growling = "growling"
     SpittingBullet = "spitting_bullet"
+    DroppingBomb = "dropping_bomb"
+
+class OptionalFeature(Enum):
+    ReducedSight = "ReducedSight"
