@@ -1,5 +1,4 @@
 from common import extra_types
-from pygame import sprite as pg_sprite
 
 from session import Session
 

@@ -21,7 +21,7 @@ class Session():
         import json
         from pathlib import Path
 
-        from pygame import display, font, transform
+        from pygame import display
 
 
 

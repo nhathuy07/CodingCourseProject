@@ -1,9 +1,7 @@
 from common import extra_types
 from common.config import (
     DISPLAY_SCALING,
-    FONT,
     FONT2,
-    TRANSISTION_SPEED,
     get_window_size,
 )
 from session import Session

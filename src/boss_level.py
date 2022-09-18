@@ -1,12 +1,8 @@
-from webbrowser import get
-from common import events
-from common.config import BossConfig, get_window_size
-import entities
+from common.config import get_window_size
 from entities.enemy_boss import EnemyBoss
 from world import World
 from session import Session
 from common.extra_types import Levels
-from pygame import event, draw, rect
 class BossLevel(World):
     def __init__(self, session: Session, level: Levels) -> None:
         super().__init__(session, level)

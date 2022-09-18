@@ -1,16 +1,13 @@
 import ctypes
-from math import floor
-from random import SystemRandom, choice, choices, randint, random
+from random import SystemRandom, choice, randint
 from time import time
 from common import extra_types
 from common.config import (
     DISPLAY_SCALING,
     FONT,
-    DripstoneConfig,
     EnemyConfig,
     EnemyType2Config,
     EnemyType3Config,
-    PlayerConfig,\
     get_window_size,
 )
 from common.events import (
@@ -30,8 +27,7 @@ from inventoryPane import InventoryPane
 from session import Session
 from entities.ground import Ground
 from entities import collectible, liquid, player
-from pygame import font, event, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, KEYDOWN, KEYUP, K_ESCAPE, key
-import pymsgbox
+from pygame import KEYDOWN, KEYUP, K_ESCAPE, MOUSEBUTTONDOWN, event, font, key
 from visual_fx.trail_fx import TrailFx
 from pygame import mixer
 

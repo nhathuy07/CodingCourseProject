@@ -1,8 +1,8 @@
 
-from random import randint, random
+from random import randint
 from common.config import BulletConfig
 from session import Session
-from pygame import transform, draw
+from pygame import transform
 from time import time
 
 

@@ -1,11 +1,9 @@
 from pygame import event as pg_event
 from pygame import font as pg_font
 from pygame import mouse as pg_mouse
-from pygame import display as pg_disp
-from pygame import mixer as pg_mixer
 from pygame import MOUSEBUTTONDOWN, QUIT, K_ESCAPE
 from pygame import key as pg_key
-from common.extra_types import Items, Levels
+from common.extra_types import Items
 from session import Session
 from common import config, events
 from ctypes import windll

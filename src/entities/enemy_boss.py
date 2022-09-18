@@ -1,10 +1,9 @@
-from random import randint, random, choice
+from random import choice, randint
 from time import time
 from common.config import BossConfig, BulletConfig, get_window_size
 from common.events import OUTRO
-from common.extra_types import BossState, MobState
-import entities
-from entities.bullet import EnemyBullet, PlayerBullet
+from common.extra_types import BossState
+from entities.bullet import EnemyBullet
 from session import Session
 from world import World
 from pygame import draw, rect,event

@@ -2,7 +2,6 @@ import json, pygame
 
 from common import events
 from common.config import DISPLAY_SCALING, get_window_size
-from common.paths import ASSETS_PATH
 
 from common.utils import drawText
 from session import Session
@@ -65,7 +64,6 @@ class Intro():
         self.sound_played = False
         self.current_sound.stop()
         self.alpha = 0
-        from common.events import PLAY
 
         if self.current_page < self.page_count - 1:
             self.current_page += 1

@@ -1,4 +1,4 @@
-from pygame import event, USEREVENT, QUIT, MOUSEBUTTONDOWN
+from pygame import MOUSEBUTTONDOWN, QUIT, USEREVENT
 
 from common.extra_types import Levels, Items
 

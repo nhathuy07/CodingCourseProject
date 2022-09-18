@@ -1,5 +1,5 @@
 from time import time
-from common.config import DISPLAY_SCALING, FONT, PlayerConfig
+from common.config import DISPLAY_SCALING, FONT
 from entities import player
 from session import Session
 from pygame import font

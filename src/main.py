@@ -1,6 +1,6 @@
 import ctypes
 from boss_level import BossLevel
-from common.extra_types import Items, Levels, Scheme
+from common.extra_types import Items, Levels
 from mission_completed import MissionCompletedScr
 from preload_scr import PreLoadScr
 from session import Session

@@ -1,8 +1,8 @@
 
 from time import time
-from typing import Any, List, Optional
+from typing import Any, List
 from common.config import DISPLAY_SCALING, BulletConfig, PlayerConfig, get_window_size
-from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, PLAYER_DIED, SHOOT
+from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, PLAYER_DIED
 from common.extra_types import Collectibles, Ground, Ores, PlayerState
 from entities import bullet
 from entities.collectible import Collectible
@@ -11,18 +11,12 @@ from pygame import (
     Surface,
     Rect,
     event,
-    MOUSEBUTTONDOWN,
-    KEYDOWN,
-    KEYUP,
-    K_LSHIFT,
-    K_RSHIFT,
     K_a,
     K_d,
     K_f,
     K_LEFT,
     K_RIGHT,
     K_SPACE,
-    KMOD_SHIFT,
     transform,
     key
 )

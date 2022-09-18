@@ -1,9 +1,9 @@
 from random import randint
 from time import time
-from common.config import DISPLAY_SCALING, FONT, BulletConfig, get_window_size
+from common.config import DISPLAY_SCALING, FONT, get_window_size
 from common.extra_types import MobState, Mobs
 from session import Session
-from pygame import transform, draw, font
+from pygame import font, transform
 class Enemy:
     def __init__(
         self,

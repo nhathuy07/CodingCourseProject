@@ -7,8 +7,7 @@ from session import Session
 
 class Dialogue:
     def __init__(self, session: Session, pg_range: tuple[int, int], pre_bossfight = False, bossfight = False) -> None:
-        from common import paths
-        from pathlib import Path
+        pass
 
         self.range = pg_range
         self.dialog_list = session.dialogue_data["dialogues"]

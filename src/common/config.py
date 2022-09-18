@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from pygame import image, transform, Rect, display
-from common.paths import ASSETS_PATH, DATA_PATH
+from pygame import Rect, display
+from common.paths import DATA_PATH
 
 display.init()
 display.set_mode()

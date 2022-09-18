@@ -1,5 +1,5 @@
 from typing import Dict
-from common.config import DISPLAY_SCALING, FONT, FONT2, get_window_size
+from common.config import DISPLAY_SCALING, FONT, get_window_size
 from common.events import ITEM_COLLECTED
 
 from session import Session
