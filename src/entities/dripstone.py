@@ -1,7 +1,7 @@
 from random import randint, random
 from time import time
 from common.config import DripstoneConfig
-from common.types import Projectiles
+from common.extra_types import Projectiles
 import entities
 from session import Session
 from pygame import transform

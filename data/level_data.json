@@ -36,5 +36,12 @@
         },
         "AvailableMobType": ["Type3"],
         "OptionalFeature": ["ReducedSight"]
+    },
+    "BOSS":{
+        "Scheme": "OuterSpace",
+        "Items": {},
+        "AvailableMobType": [],
+        "OptionalFeature": ["NoCollectibles"]
     }
+
 }

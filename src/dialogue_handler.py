@@ -1,11 +1,12 @@
 import pygame
 from common import config, events, utils
+from common.extra_types import Levels
 from common.paths import ASSETS_PATH
 from session import Session
 
 
 class Dialogue:
-    def __init__(self, session: Session, pg_range: tuple[int, int], pre_bossfight = False) -> None:
+    def __init__(self, session: Session, pg_range: tuple[int, int], pre_bossfight = False, bossfight = False) -> None:
         from common import paths
         from pathlib import Path
 
@@ -25,6 +26,11 @@ class Dialogue:
         self.sound_played = False
 
         self.pre_bossfight = pre_bossfight
+        self.bossfight = bossfight
+
+        pygame.mixer.music.load(ASSETS_PATH / "sfx" / "mainmenu_2.wav")
+        pygame.mixer.music.play()
+        
     def next_line(self):
         self.line += 1
         self.current_sound.stop()
@@ -37,7 +43,7 @@ class Dialogue:
         self.line = 0
 
     def update(self, display, session: Session):
-
+        #self.sound.play()
 
         if self.line < len(self.dialog_list[self.section]):
             from common import config
@@ -110,8 +116,16 @@ class Dialogue:
                 )
         elif self.section < self.range[1]:
             self.set_section(self.section + 1)
+        else:
 
-        elif not self.pre_bossfight:
-            pygame.event.post(pygame.event.Event(events.GO_TO_LV_SELECTION))
-        elif self.pre_bossfight:
-            pygame.event.post(pygame.event.Event(events.BOSS_LVL_INTRO))
+            if not self.pre_bossfight:
+                if not self.bossfight:
+                    pygame.event.post(pygame.event.Event(events.GO_TO_LV_SELECTION))
+                else:
+                    pygame.event.post(pygame.event.Event(Levels.BOSS.value))
+            
+            elif self.pre_bossfight:
+                pygame.event.post(pygame.event.Event(events.BOSS_LVL_INTRO))
+                pygame.mixer.music.stop()
+                pygame.mixer.music.unload()
+            

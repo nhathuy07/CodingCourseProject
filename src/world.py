@@ -2,7 +2,7 @@ import ctypes
 from math import floor
 from random import SystemRandom, choice, choices, randint, random
 from time import time
-from common import types
+from common import extra_types
 from common.config import (
     DISPLAY_SCALING,
     FONT,
@@ -10,7 +10,7 @@ from common.config import (
     EnemyConfig,
     EnemyType2Config,
     EnemyType3Config,
-    PlayerConfig,
+    PlayerConfig,\
     get_window_size,
 )
 from common.events import (
@@ -20,7 +20,7 @@ from common.events import (
     MISSION_COMPLETED,
     PLAYER_DIED,
 )
-from common.types import Collectibles, Items, Levels, Liquid, Mobs, Ores, Projectiles, Scheme
+from common.extra_types import Collectibles, Items, Levels, Liquid, Mobs, Ores, Projectiles, Scheme
 from entities.dripstone import Dripstone
 from entities.enemy import Enemy
 from gunPerkTimerPane import GunPerkTimerPane
@@ -33,7 +33,7 @@ from pygame import font, event, MOUSEBUTTONDOWN, MOUSEBUTTONUP, QUIT, KEYDOWN, K
 import pymsgbox
 from visual_fx.trail_fx import TrailFx
 from pygame import mixer
-mixer.init()
+
 class World:
     def __init__(self, session: Session, level: Levels) -> None:
         self.level = level
@@ -74,19 +74,21 @@ class World:
         mixer.music.load(session.sfx_path / "game.wav")
         mixer.music.play()
 
-        event.set_allowed(
-            (
+        allowed_events = [
                 KEYUP,
                 KEYDOWN,
                 MOUSEBUTTONDOWN,
                 ITEM_COLLECTED,
                 PLAYER_DIED,
                 GO_TO_LV_SELECTION,
-                Items[self.level.name].value,
                 MISSION_COMPLETED
-            )
-        )
+                ]
+        if self.level.name in set(item.name for item in Items):
+            allowed_events.append(Items[self.level.name].value)
 
+        event.set_allowed(
+            allowed_events
+        )
         self.last_mob_spawn = 0
         self.mob_spawn_interval = 6
 
@@ -127,7 +129,7 @@ class World:
                         and not left_face
                         and not bottom_face
                     ):
-                        ground_type = types.Ground.NoFace
+                        ground_type = extra_types.Ground.NoFace
 
                     # One face
                     if (
@@ -136,56 +138,56 @@ class World:
                         and not left_face
                         and not bottom_face
                     ):
-                        ground_type = types.Ground.UpFace
+                        ground_type = extra_types.Ground.UpFace
                     if (
                         right_face
                         and not top_face
                         and not left_face
                         and not bottom_face
                     ):
-                        ground_type = types.Ground.RightFace
+                        ground_type = extra_types.Ground.RightFace
                     if (
                         left_face
                         and not top_face
                         and not right_face
                         and not bottom_face
                     ):
-                        ground_type = types.Ground.LeftFace
+                        ground_type = extra_types.Ground.LeftFace
                     if (
                         bottom_face
                         and not top_face
                         and not left_face
                         and not right_face
                     ):
-                        ground_type = types.Ground.DownFace
+                        ground_type = extra_types.Ground.DownFace
 
                     # Two face
                     if left_face and right_face and not top_face and not bottom_face:
-                        ground_type = types.Ground.FacingLeftRight
+                        ground_type = extra_types.Ground.FacingLeftRight
                     if top_face and bottom_face and not left_face and not right_face:
-                        ground_type = types.Ground.FacingTopBottom
+                        ground_type = extra_types.Ground.FacingTopBottom
                     if left_face and top_face and not bottom_face and not right_face:
-                        ground_type = types.Ground.LeftUpFace
+                        ground_type = extra_types.Ground.LeftUpFace
                     if left_face and bottom_face and not top_face and not right_face:
-                        ground_type = types.Ground.LeftDownFace
+                        ground_type = extra_types.Ground.LeftDownFace
                     if right_face and bottom_face and not top_face and not left_face:
-                        ground_type = types.Ground.RightDownFace
+                        ground_type = extra_types.Ground.RightDownFace
                     if right_face and top_face and not left_face and not bottom_face:
-                        ground_type = types.Ground.RightUpFace
+                        ground_type = extra_types.Ground.RightUpFace
 
                     # Three face
                     if left_face and bottom_face and right_face and not top_face:
-                        ground_type = types.Ground.FacingBottomLeftRight
+                        ground_type = extra_types.Ground.FacingBottomLeftRight
                     if top_face and left_face and bottom_face and not right_face:
-                        ground_type = types.Ground.FacingTopLeftBottom
+                        ground_type = extra_types.Ground.FacingTopLeftBottom
                     if top_face and right_face and bottom_face and not left_face:
-                        ground_type = types.Ground.FacingTopRightBottom
+                        ground_type = extra_types.Ground.FacingTopRightBottom
                     if top_face and left_face and right_face and not bottom_face:
-                        ground_type = types.Ground.FacingTopLeftRight
+                        ground_type = extra_types.Ground.FacingTopLeftRight
 
                     # All face
                     if top_face and right_face and left_face and bottom_face:
-                        ground_type = types.Ground.FacingAll
+                        ground_type = extra_types.Ground.FacingAll
                     self.entities.append(
                         Ground(
                             session, ground_type, self.scheme, position[0], position[1]
@@ -231,8 +233,8 @@ class World:
             if time() - self.last_mob_spawn > self.mob_spawn_interval and time() - self.init_time > 2:
                 self.spawn_mob(session)
                 self.last_mob_spawn = time()
-            for e in self.entities:
 
+            for e in self.entities:
                 if type(e).__name__ == "PlayerBullet":
                     e.update(self.entities)
                     if e.alpha <= 0 and e.exploded:
@@ -257,6 +259,14 @@ class World:
                         e.render(display)
                     else:
                         self.entities.remove(e)
+                elif type(e).__name__ == "EnemyBoss":
+                    e.render(display, self, session)
+                    e.rect.left += self.delta_screen_offset
+                elif type(e).__name__ == "PlayerBullet" or type(e).__name__ == "EnemyBullet":
+                    e.rect.left = self.abs_screen_offset + e.init_coord[0]
+                    e.update(self.entities)
+                    e.render(display, self.entities)
+
                 else:
                     e.rect.left = self.abs_screen_offset + e.init_coord[0]
                     e.render(display)
@@ -320,18 +330,19 @@ class World:
             self.paused = True
 
     def inventory_check(self, session: Session):
-        inventory_check_result = []
-        for item in self.player.inventory:
-            if self.player.inventory[item] >= self.goal[item]:
-                inventory_check_result.append(True)
-            else:
-                inventory_check_result.append(False)
-        if False not in inventory_check_result and len(inventory_check_result) == len(self.goal):
-            mixer.music.stop()
-            mixer.music.unload()
-            event.post(event.Event(MISSION_COMPLETED))
-            session.add_item(Items[self.level.name])
-            session.update_savefile()
+        if "NoCollectibles" not in self.optionalFeatures:
+            inventory_check_result = []
+            for item in self.player.inventory:
+                if self.player.inventory[item] >= self.goal[item]:
+                    inventory_check_result.append(True)
+                else:
+                    inventory_check_result.append(False)
+            if False not in inventory_check_result and len(inventory_check_result) == len(self.goal):
+                mixer.music.stop()
+                mixer.music.unload()
+                event.post(event.Event(MISSION_COMPLETED))
+                session.add_item(Items[self.level.name])
+                session.update_savefile()
 
 
 

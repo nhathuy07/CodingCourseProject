@@ -1,6 +1,6 @@
 from pygame_menu import Menu, themes, events as pg_menu_events
 import pygame as pg
-from common.types import MenuOption
+from common.extra_types import MenuOption
 from common import events
 from common.config import get_window_size
 from session import Session

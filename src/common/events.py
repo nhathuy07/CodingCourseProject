@@ -1,6 +1,6 @@
 from pygame import event, USEREVENT, QUIT, MOUSEBUTTONDOWN
 
-from common.types import Levels, Items
+from common.extra_types import Levels, Items
 
 ABOUT = USEREVENT + 1
 MAIN_MENU = USEREVENT + 2
@@ -21,6 +21,7 @@ MISSION_COMPLETED = USEREVENT + 16
 PAUSE = USEREVENT + 17
 PRE_BOSS_LVL_DIALOGUE = USEREVENT + 18
 BOSS_LVL_INTRO = USEREVENT + 19
+BOSS_LVL_DIALOGUE = USEREVENT + 20
 # load event codes
 commonEvents = (
     PLAY,

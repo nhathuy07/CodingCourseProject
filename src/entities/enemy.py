@@ -1,7 +1,7 @@
 from random import randint
 from time import time
 from common.config import DISPLAY_SCALING, FONT, BulletConfig, get_window_size
-from common.types import MobState, Mobs
+from common.extra_types import MobState, Mobs
 from session import Session
 from pygame import transform, draw, font
 class Enemy:
@@ -102,7 +102,7 @@ class Enemy:
 
     def attack(self, world, display):
         self.state = MobState.Attacking 
-        world.player.inflict_damage(self.damage, self.weapon_cooldown, entities=world.entities)
+        world.player.inflict_damage(self.damage, self.weapon_cooldown, entities=world.entities, world=world)
         self.attack_anim_frame = 0
         self.last_attack_time = time()
         

@@ -3,7 +3,7 @@ from time import time
 from typing import Any, List, Optional
 from common.config import DISPLAY_SCALING, BulletConfig, PlayerConfig, get_window_size
 from common.events import EMIT_TRAIL_PARTICLE, ITEM_COLLECTED, PLAYER_DIED, SHOOT
-from common.types import Collectibles, Ground, Ores, PlayerState
+from common.extra_types import Collectibles, Ground, Ores, PlayerState
 from entities import bullet
 from entities.collectible import Collectible
 from session import Session
@@ -172,7 +172,7 @@ class Player():
                 )
             self.last_shoot_time = time()
 
-    def check_collision_with_liquid(self, entities: List[Any], display):
+    def check_collision_with_liquid(self, entities: List[Any], world):
         for c in entities:
             if (
                 c.rect.colliderect(
@@ -185,7 +185,7 @@ class Player():
                 )
                 and type(c).__name__ == "Liquid"
             ):
-                self.inflict_damage(40, 0.1, entities=entities)
+                self.inflict_damage(40, 0.1, entities=entities, world=world)
                 self.terminal_velocity = 3
 
     def update_speed_based_on_collision(self, terrain: List[Ground]):
@@ -275,6 +275,7 @@ class Player():
         interval: float,
         knockback: float = 0,
         entities=None,
+        world=None 
         #display=None,
     ):
         self.hurt_sound.play()
@@ -290,6 +291,7 @@ class Player():
                 self.update_speed_based_on_collision(
                     [x for x in entities if type(x).__name__ == "Ground"]
                 )
+                self.update_world_offset(world)
             self.hp -= hp
             self.last_damaged_time = time()
         if self.hp < 0:
@@ -384,7 +386,7 @@ class Player():
             self.particle_effect()
 
         self.collect_item(entities)
-        self.check_collision_with_liquid(entities, display)
+        self.check_collision_with_liquid(entities, world)
         self.particle_relative_position = [27, self.rect.height - 15 + self.y_offset]
 
     def render(self, display):

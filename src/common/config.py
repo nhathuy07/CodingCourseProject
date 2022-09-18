@@ -39,6 +39,7 @@ class PlayerConfig:
 @dataclass
 class BulletConfig:
     Dx = 35
+    Dy = 0
     Gravity = 0.2
     Damage = 20
 
@@ -78,13 +79,14 @@ class EnemyType3Config:
 
 @dataclass
 class BossConfig:
-    Dx = 28
-    Dy = 12
+    Dx = 9.5
+    Dy = 8
     Damage = 25
-    SimultaneousBulletSpawn = (10, 20)
+    SimultaneousBulletSpawn = (7, 13)
     SimultaneousMeteoriteSpawn = (5, 7)
     InstakillPosibilities = 0.1
     GrowlKnockbackDistance = 20
+    Hp = 120
 
 @dataclass
 class DripstoneConfig:

@@ -1,9 +1,9 @@
-from common import types
+from common import extra_types
 from session import Session
 
 
 class Liquid:
-    def __init__(self, session: Session, x, y, liquid_type: types.Liquid) -> None:
+    def __init__(self, session: Session, x, y, liquid_type: extra_types.Liquid) -> None:
         self.init_coord = (x, y)
         self.x = x
         self.y = y

@@ -14,6 +14,7 @@ class Intro():
         from common import paths
         from common import utils
         pygame.mixer.init()
+        self.pre_bossfight = pre_bossfight
         self.alpha = 0
 
         self.dialogue_path = paths.DATA_PATH / "dialogues.json"
@@ -56,9 +57,12 @@ class Intro():
 
         if self.current_page < self.page_count - 1:
             self.current_page += 1
-        else:
+        elif not self.pre_bossfight:
             self.current_sound.stop()
             pygame.event.post(pygame.event.Event(events.INTRODUCTION_DIALOGUE))
+        else:
+            self.current_sound.stop()
+            pygame.event.post(pygame.event.Event(events.BOSS_LVL_DIALOGUE))
             
 
     def update(self, display: pygame.surface.Surface, session: Session):

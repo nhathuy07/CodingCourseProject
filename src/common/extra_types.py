@@ -2,11 +2,13 @@ from enum import Enum, auto
 from pygame import USEREVENT
 
 
+
 class Items(Enum):
     SHELL = USEREVENT + 120
     THRUSTER = USEREVENT + 121
     COMM_SYSTEM = USEREVENT + 122
     ENERGY_CORE = USEREVENT + 123
+
 
 
 class Levels(Enum):
@@ -58,6 +60,7 @@ class Scheme(Enum):
     BlueCave = 0
     LavaCave = 1
     DarkCave = 2
+    OuterSpace = 3
 
 
 class Mobs(Enum):
@@ -69,7 +72,7 @@ class Mobs(Enum):
 class Projectiles(Enum):
     # EnemyBullet = 30
     Dripstone = 31
-    Dripstone2 = 32
+    EnemyBullet = 32
     PlayerBullet = 33
 
 

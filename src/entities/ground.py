@@ -1,4 +1,4 @@
-from common import types
+from common import extra_types
 from pygame import sprite as pg_sprite
 
 from session import Session
@@ -6,7 +6,7 @@ from session import Session
 
 class Ground:
     def __init__(
-        self, session: Session, variation: types.Ground, scheme: types.Scheme, x, y
+        self, session: Session, variation: extra_types.Ground, scheme: extra_types.Scheme, x, y
     ):
         self.init_coord = (x, y)
         self.image = session.ground_texture[scheme.value][variation.name]

@@ -1,5 +1,6 @@
 import ctypes
-from common.types import Items, Levels, Scheme
+from boss_level import BossLevel
+from common.extra_types import Items, Levels, Scheme
 from mission_completed import MissionCompletedScr
 from preload_scr import PreLoadScr
 from session import Session
@@ -10,6 +11,9 @@ from level_selection_menu import LvSelection
 import pygame
 from common import config, events
 from world import World
+
+pygame.mixer.init()
+pygame.mixer.set_num_channels(3)
 
 # load event codes
 commonEvents = (
@@ -25,7 +29,8 @@ commonEvents = (
     pygame.KEYDOWN,
     events.MAIN_MENU,
     events.PRE_BOSS_LVL_DIALOGUE,
-    events.BOSS_LVL_INTRO
+    events.BOSS_LVL_INTRO,
+    events.BOSS_LVL_DIALOGUE
 )
 preloaderCode = [x.value for x in Items]
 levelCode = [x.value for x in Levels]
@@ -62,6 +67,9 @@ if __name__ == "__main__":
         elif type(current_screen).__name__ == "MissionCompletedScr":
             common_events_allowed = False
             current_screen.update(display)
+        elif type(current_screen).__name__ == "BossLevel":
+            common_events_allowed = False
+            current_screen.update(session, display, clock.get_fps())
 
         for e in pygame.event.get(
             eventtype=(*commonEvents, *levelCode, *preloaderCode)
@@ -156,7 +164,11 @@ if __name__ == "__main__":
                     (pygame.QUIT, pygame.MOUSEBUTTONDOWN, *levelCode)
                 )
             elif e.type in levelCode:
-                current_screen = World(session, Levels(e.type))
+                if Levels(e.type) != Levels.BOSS:
+                    current_screen = World(session, Levels(e.type))
+                else:
+                    pygame.mixer.music.stop()
+                    current_screen = BossLevel(session, Levels(e.type))
 
             elif e.type == pygame.QUIT or (
                 e.type == pygame.KEYDOWN and e.key == pygame.KMOD_ALT | pygame.K_F4
@@ -176,12 +188,14 @@ if __name__ == "__main__":
                 pygame.event.clear()
 
             elif e.type == events.PRE_BOSS_LVL_DIALOGUE:
-                pygame.event.set_allowed(events.BOSS_LVL_INTRO)
+                pygame.event.set_allowed((events.BOSS_LVL_INTRO, events.BOSS_LVL_DIALOGUE))
                 current_screen = Dialogue(session, (2, 2), pre_bossfight=True)
                 
-
             elif e.type == events.BOSS_LVL_INTRO:
                 current_screen = Intro(True)
+            
+            elif e.type == events.BOSS_LVL_DIALOGUE:
+                current_screen = Dialogue(session, (3, 3), pre_bossfight=False, bossfight=True)
 
 
         pygame.display.flip()

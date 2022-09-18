@@ -1,4 +1,4 @@
-from common import types
+from common import extra_types
 from common.config import (
     DISPLAY_SCALING,
     FONT,
@@ -11,7 +11,7 @@ from pygame import event as pg_event, font as pg_font, draw as pg_draw, rect as 
 
 
 class PreLoadScr:
-    def __init__(self, session: Session, objective: types.Items) -> None:
+    def __init__(self, session: Session, objective: extra_types.Items) -> None:
         self.objective = objective
         self.bg_offset_y = 0
         self.items_count = len(session.level_data[self.objective.name]["Items"])
@@ -92,5 +92,5 @@ class PreLoadScr:
                 self.step += 1
 
         else:
-            event = types.Levels[self.objective.name].value
+            event = extra_types.Levels[self.objective.name].value
             pg_event.post(pg_event.Event(event))

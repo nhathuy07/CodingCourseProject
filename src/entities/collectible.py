@@ -1,5 +1,5 @@
 from common.config import DISPLAY_SCALING
-from common.types import Collectibles
+from common.extra_types import Collectibles
 from session import Session
 
 
