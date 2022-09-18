@@ -178,13 +178,18 @@ class Session():
         # Dripstone dropping effect
         self.DRIPSTONE_FALLING = load_img(ASSETS_PATH / "fx" / "dripstone_falling.png")
 
-        
         # Reduced sight effect
         self.REDUCED_SIGHT = load_img(ASSETS_PATH / "fx" / "reduced_sight.png")
         self.REDUCED_SIGHT_RECT = self.REDUCED_SIGHT.get_rect()
+        
         # Mission Completed
         self.MISSION_COMPLETED_SCR = load_img(ASSETS_PATH / "icons" / "missionCompletedScreen.png")
-        # load projectiles
+        
+        # Boss death effect
+        self.BOSS_DEATH_DIR = ASSETS_PATH / "mobs" / "Boss" / "Dying"
+        self.BOSS_DEATH = tuple(map(load_img, self.BOSS_DEATH_DIR.glob("*.png")))
+
+        ## --LOAD PROJECTILES---
         self.projectile_dir = ASSETS_PATH / "projectiles"
         self.projectile = {}
         for p in extra_types.Projectiles._member_names_:
@@ -211,7 +216,10 @@ class Session():
             self.boss_sprite[p] = {}
             for i in ("Original", "Hurt"):
                 self.boss_sprite[p][i] = load_img(self.boss_sprite_dir / i / f"{p}.png") # syntax: self.boss_sprite[state][is_hurt]
-            
+
+        # Load outro
+        self.OUTRO = load_img(ASSETS_PATH / "outro" / "0.png")
+
         ## AUDIO ##
         self.sfx_path = ASSETS_PATH / "sfx"
         self.sfx = {}

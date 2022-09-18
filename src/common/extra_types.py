@@ -74,6 +74,7 @@ class Projectiles(Enum):
     Dripstone = 31
     EnemyBullet = 32
     PlayerBullet = 33
+    Meteorite = 34
 
 
 class Liquid(Enum):

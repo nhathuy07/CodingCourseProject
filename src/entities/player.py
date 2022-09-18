@@ -138,6 +138,7 @@ class Player():
         session.sfx["blaster.wav"].play()
         if time() <= self.gun_perk_expire_time:
             self.damage = BulletConfig.Damage * 2
+
         else:
             self.damage = BulletConfig.Damage
         
@@ -168,6 +169,7 @@ class Player():
                         bullet_init_pos[0],
                         bullet_init_pos[1],
                         dx=-BulletConfig.Dx,
+                        damage=self.damage
                     )
                 )
             self.last_shoot_time = time()

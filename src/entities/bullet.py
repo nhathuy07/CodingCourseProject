@@ -1,3 +1,4 @@
+
 from random import randint, random
 from common.config import BulletConfig
 from session import Session
@@ -81,10 +82,10 @@ class PlayerBullet:
         # self.update(entities)
         if not self.exploded:
             display.blit(self.current_img, self.rect.topleft)
-            draw.rect(display, (0, 255, 255), self.rect, 5)
+            #draw.rect(display, (0, 255, 255), self.rect, 5)
         else:
             display.blit(self.current_img, self.fx_rect.topleft)
-            draw.rect(display, (0, 255, 255), self.rect, 5)
+            #draw.rect(display, (0, 255, 255), self.rect, 5)
 
 class EnemyBullet(PlayerBullet):
     def __init__(
@@ -96,6 +97,7 @@ class EnemyBullet(PlayerBullet):
     dy= BulletConfig.Dy,
     gravity=BulletConfig.Gravity,
     damage=BulletConfig.Damage,
+    is_meteorite = False
     ) -> None:
         self.x = x
         self.y = y
@@ -103,7 +105,11 @@ class EnemyBullet(PlayerBullet):
         self.dy = dy
         self.gravity = gravity
         self.damage = damage
-        self.images = session.projectile["EnemyBullet"]
+        if not is_meteorite:
+            self.images = session.projectile["EnemyBullet"]
+        else:
+            self.images = session.projectile["Meteorite"]
+
         self.index = 0
         self.base_rect = self.images[0].get_rect()
         self.base_rect.center = (int(self.x), int(self.y))
@@ -138,6 +144,7 @@ class EnemyBullet(PlayerBullet):
                     self.explosion_time = time() + 0.01
             if time() >= self.explosion_time and self.explosion_time > 0:
                 self.exploded = True
+            self.init_coord = self.rect.topleft
         elif self.alpha >= 0:
 
             self.rotation = randint(0, 360)

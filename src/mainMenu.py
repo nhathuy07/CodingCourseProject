@@ -16,7 +16,7 @@ class MainMenu:
         
         self.display = display
         self.menu = Menu(
-            "RoboMiner",
+            "Space Miner",
             get_window_size()[0],
             get_window_size()[1],
             theme=themes.THEME_DARK,

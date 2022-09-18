@@ -74,8 +74,8 @@
   "boss_fight": {
       "intro": ["With Roger's help, Mark is confident that he can contiue his journey.", "But he's seriously wrong! An angry giant is blocking his way, ready to smash him into pieces."],
       "audio_sequence": ["spaceship_launch.wav", "monster_growling.wav"]
-    
-    
-  }
-
+  },
+  "outro": ["Having beaten the giant monster, Mark flew away from the planet, continuing his journey to explore more about life outside Earth."],
+  "outro_audio_sequence": ["spaceship_launch.wav"]
+  
 }

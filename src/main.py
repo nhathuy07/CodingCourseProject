@@ -30,7 +30,8 @@ commonEvents = (
     events.MAIN_MENU,
     events.PRE_BOSS_LVL_DIALOGUE,
     events.BOSS_LVL_INTRO,
-    events.BOSS_LVL_DIALOGUE
+    events.BOSS_LVL_DIALOGUE,
+    events.OUTRO
 )
 preloaderCode = [x.value for x in Items]
 levelCode = [x.value for x in Levels]
@@ -188,7 +189,7 @@ if __name__ == "__main__":
                 pygame.event.clear()
 
             elif e.type == events.PRE_BOSS_LVL_DIALOGUE:
-                pygame.event.set_allowed((events.BOSS_LVL_INTRO, events.BOSS_LVL_DIALOGUE))
+                pygame.event.set_allowed((events.BOSS_LVL_INTRO, events.BOSS_LVL_DIALOGUE, events.OUTRO, events.MAIN_MENU))
                 current_screen = Dialogue(session, (2, 2), pre_bossfight=True)
                 
             elif e.type == events.BOSS_LVL_INTRO:
@@ -197,6 +198,12 @@ if __name__ == "__main__":
             elif e.type == events.BOSS_LVL_DIALOGUE:
                 current_screen = Dialogue(session, (3, 3), pre_bossfight=False, bossfight=True)
 
+            elif e.type == events.OUTRO:
+                current_screen = Intro(False, True)
 
+            elif e.type == events.ABOUT:
+                ret_val = ctypes.windll.user32.MessageBoxW(0, "SPACE MINER\nA small game by Nhat Huy\n\n--Credits--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\nThis game is written using the following libraries:\npygame 2.1.2\npygame-menu 4.2.8\nctypes", "About", 0x0|0x40)
+                if ret_val == 1:
+                    pygame.event.post(pygame.event.Event(events.MAIN_MENU))
         pygame.display.flip()
         clock.tick(60)

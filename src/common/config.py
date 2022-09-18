@@ -83,11 +83,11 @@ class BossConfig:
     Dy = 8
     Damage = 25
     SimultaneousBulletSpawn = (7, 13)
-    SimultaneousMeteoriteSpawn = (5, 7)
-    InstakillPosibilities = 0.1
-    GrowlKnockbackDistance = 20
-    Hp = 120
-
+    SimultaneousMeteoriteSpawn = 7
+    #InstakillPosibilities = 0.1
+    GrowlKnockbackDistance = 70
+    #Hp = 250
+    Hp = 20 # <== for debugging purposes only
 @dataclass
 class DripstoneConfig:
     Dy = 16

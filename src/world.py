@@ -14,6 +14,7 @@ from common.config import (
     get_window_size,
 )
 from common.events import (
+    BOSS_LVL_INTRO,
     EMIT_TRAIL_PARTICLE,
     GO_TO_LV_SELECTION,
     ITEM_COLLECTED,
@@ -294,7 +295,10 @@ class World:
                         )
                         self.retry_prompt = True
                     if ret_val == 6:
-                        event.post(event.Event(Items[self.level.name].value))
+                        if self.level != Levels.BOSS:
+                            event.post(event.Event(Items[self.level.name].value))
+                        else:
+                            event.post(event.Event(BOSS_LVL_INTRO))
                     elif ret_val == 7:
                         event.post(event.Event(GO_TO_LV_SELECTION))
 
@@ -308,7 +312,8 @@ class World:
             f = self.font.render(f"{key.get_pressed()[K_ESCAPE]}", True, (255, 255, 255))
             display.blit(f, (10, 10))
             self.optional_features(display, session)
-            self.inventory_pane.render(session, display, self.player.inventory)
+            if self.inventory_pane != None:
+                self.inventory_pane.render(session, display, self.player.inventory)
             self.hp_pane.render(self.player, display)
             self.perk_timer_pane.render(self.player, display)
             self.pause_check()

@@ -114,9 +114,10 @@ class Enemy:
             current_img = self.sprites[self.state.name][self.attack_anim_frame % len(self.sprites[self.state.name])]
         display.blit(current_img, (self.rect.left - int(70 * DISPLAY_SCALING), self.rect.top))
         self.font = font.Font(FONT[0], 18)
-        stateDisp = self.font.render(f"{self.state.name}, {self.attack_anim_frame}", True, (255, 255, 255))
-        display.blit(stateDisp, (self.rect.left - int(70 * DISPLAY_SCALING), self.rect.top - 10))
-        draw.rect(display, (255, 0, 0), self.rect, 5)
+        #stateDisp = self.font.render(f"{self.state.name}, {self.attack_anim_frame}", True, (255, 255, 255))
+        #display.blit(stateDisp, (self.rect.left - int(70 * DISPLAY_SCALING), self.rect.top - 10))
+        #draw.rect(display, (255, 0, 0), self.rect, 5)
+    
     def check_collision_with_bullet(self, bullets):
         for b in bullets:
             if b.rect.colliderect(self.rect) and time() - self.last_hurt_time > 0.1 and not b.exploded: # Enemy becomes temporarily invincible after being shot
