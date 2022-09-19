@@ -202,7 +202,7 @@ if __name__ == "__main__":
                 current_screen = Intro(False, True)
 
             elif e.type == events.ABOUT:
-                ret_val = ctypes.windll.user32.MessageBoxW(0, "SPACE MINER\nA small game by Nhat Huy\n\n--Credits--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\nThis game is written using the following libraries:\npygame 2.1.2\npygame-menu 4.2.8\nctypes", "About", 0x0|0x40)
+                ret_val = ctypes.windll.user32.MessageBoxW(0, "SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes", "About", 0x0|0x40)
                 if ret_val == 1:
                     pygame.event.post(pygame.event.Event(events.MAIN_MENU))
         pygame.display.flip()

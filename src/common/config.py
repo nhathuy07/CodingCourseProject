@@ -86,8 +86,8 @@ class BossConfig:
     SimultaneousMeteoriteSpawn = 7
     #InstakillPosibilities = 0.1
     GrowlKnockbackDistance = 70
-    Hp = 220
-    #Hp = 20 <== for debugging purposes only
+    #Hp = 220
+    Hp = 20 #<== for debugging purposes only
 @dataclass
 class DripstoneConfig:
     Dy = 16

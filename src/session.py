@@ -1,6 +1,7 @@
 import csv
 
 import os
+import pathlib
 
 from typing import Dict
 
@@ -187,7 +188,10 @@ class Session():
         
         # Boss death effect
         self.BOSS_DEATH_DIR = ASSETS_PATH / "mobs" / "Boss" / "Dying"
-        self.BOSS_DEATH = tuple(map(load_img, self.BOSS_DEATH_DIR.glob("*.png")))
+        # Sort sprites by name. Code adapted from https://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python
+        self.BOSS_DEATH_SPRITE_FILE_PATH = sorted([str(x) for x in self.BOSS_DEATH_DIR.glob("*.png")], key=lambda i: int(os.path.splitext(os.path.basename(i))[0]))
+
+        self.BOSS_DEATH = tuple(map(load_img, self.BOSS_DEATH_SPRITE_FILE_PATH))
 
         ## --LOAD PROJECTILES---
         self.projectile_dir = ASSETS_PATH / "projectiles"

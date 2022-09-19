@@ -66,7 +66,7 @@ class EnemyBoss():
         self.frames = session.BOSS_DEATH
         self.current_frame = 0
         self.last_frame_switch = 0
-        self.anim_interval = 0.13
+        self.anim_interval = 0.05
         self.death_sound_played = False
 
     def update(self, world: World, session: Session):
@@ -154,11 +154,13 @@ class EnemyBoss():
                 self.current_sound = session.sfx["boss_defeated.wav"]
                 self.current_sound.play()
                 self.death_sound_played = True
+            
             if self.current_frame < len(self.frames) - 1:
-                if time() - self.last_frame_switch > self.anim_interval:
+                if round(time() - self.last_frame_switch, 3) > self.anim_interval:
                     self.current_frame += 1
                     self.last_frame_switch = time()
             else:
+                self.current_frame = len(self.frames) - 1
                 event.post(event.Event(OUTRO))
                 
         
