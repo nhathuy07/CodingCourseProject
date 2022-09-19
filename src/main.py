@@ -1,4 +1,6 @@
 import ctypes
+import os
+from platform import platform, system
 from boss_level import BossLevel
 from common.extra_types import Items, Levels
 from mission_completed import MissionCompletedScr
@@ -11,7 +13,7 @@ from level_selection_menu import LvSelection
 import pygame
 from common import config, events
 from world import World
-
+from aquaui import Alert, Buttons, AlertType
 pygame.mixer.init()
 pygame.mixer.set_num_channels(3)
 
@@ -202,8 +204,15 @@ if __name__ == "__main__":
                 current_screen = Intro(False, True)
 
             elif e.type == events.ABOUT:
-                ret_val = ctypes.windll.user32.MessageBoxW(0, "SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes", "About", 0x0|0x40)
-                if ret_val == 1:
-                    pygame.event.post(pygame.event.Event(events.MAIN_MENU))
+                # do a platform check since ctypes and aquaui are platform-dependent
+                if system() == "Windows":
+                    ret_val = ctypes.windll.user32.MessageBoxW(0, "SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes", "About", 0x0|0x40)
+                    if ret_val == 1:
+                        pygame.event.post(pygame.event.Event(events.MAIN_MENU))
+                elif system() == "Darwin":
+                    buttons = Buttons(["Ok"], "Ok")
+                    result = Alert("SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes").with_buttons(buttons).show()
+                    if result.button_returned == "Ok":
+                        pygame.event.post(pygame.event.Event(events.MAIN_MENU))
         pygame.display.flip()
         clock.tick(60)
