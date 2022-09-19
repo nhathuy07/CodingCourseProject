@@ -1,7 +1,25 @@
 # Dự án trò chơi: Space Miner
+
 ## Người tham gia
 Nguyễn Đình Nhật Huy [huyndn2007@gmail.com](mailto:huyndn2007@gmail.com)
+
 ## Cách cài đặt thư viện và chạy chương trình
 ****
 1. Tạo Virtual Environment: `python -m venv .venv`
-2. Khởi động Virtual Environment: `.venv/Scripts/activate` (đối với Windows)
+2. Khởi động Virtual Environment: `.venv/Scripts/activate` (đối với Windows) hoặc `.venv/bin/activate` (đối với macOS)
+3. Cài đặt các thư viện: `python -m pip install -r requirements.txt`
+
+## Mô tả trò chơi
+### Nhân vật
+1. **Mark**: Đây là một người máy phi hành gia, có nhiệm vụ thực hiện các chuyến thám hiểm ở xa Trái Đất nhưng không may bị gặp nạn và phải sửa tàu. Xuyên suốt trò chơi, người chơi sẽ điều khiển nhân vật này di chuyển qua địa hình bằng `Phím mũi tên Trái / Phải`, nhảy qua chướng ngại vật bằng phím `Spacebar`, bắn hạ quái vật bằng phím `F` và đi xuyên qua các vật phẩm (quặng, tăng sức mạnh) để nhận chúng.<br>
+⚠️**GIỚI HẠN CỦA NHÂN VẬT**:<br>
+    * Sau khi bắn một viên đạn, người chơi phải chờ khoảng **0.2 giây** để bắn viên tiếp theo
+    * Nhân vật được cung cấp 100 HP, và **không thể** hồi lại HP trong suốt màn chơi.
+    * Nếu bị rơi xuống vũng chất lỏng ăn mòn, lượng HP của nhân vật sẽ tụt xuống 0 **gần như lập tức**.
+
+2. **Roger**: Nhân vật này sở hữu dịch vụ sửa chữa phương tiện giao thông, là người đã đề nghị sửa chữa tàu cho nhân vật chính, đổi lại, nhân vật chính đi khai thác quặng cho anh ta. Nhân vật này chỉ xuất hiện ở đoạn hội thoại mở đầu của trò chơi, và đoạn hội thoại cuối khi con tàu của nhân vật chính đã được sửa chữa xong.
+3. **Monster**: Những sinh vật ngoài hành tinh, trú ngụ trong hang động và luôn nhăm nhe tấn công nhân vật chính. Chúng có ba chủng màu khác nhau: đỏ, nâu và đen, mỗi chủng đều có tốc độ di chuyển, sức mạnh và lượng HP khác nhau. Trong số các loài trên, loài màu đen là đặc biệt hơn cả, vì khi bị tiêu diệt, chúng sẽ thải ra một loại **thanh năng lượng**.
+4. **Floating Beast**: Trùm cuối của trò chơi, có tính cách hung hãn, và xuất hiện sau khi nhân vật chính đã sửa chữa xong tàu. Khi phát hiện ra nhân vật chính đã thâm nhập vào hang động và tiêu diệt thuộc hạ, tên trùm cuối đã nổi giận và quyết hạ gục người chơi trong một trận đấu **ngoài không gian**. Trong suốt trận đấu, Floating Beast liên tục tấn công người chơi bằng những luồng đạn, những cơn mưa thiên thạch và những tiếng gào thét to đến mức có thể đẩy bật người chơi xuống vực.
+### Bối cảnh
+Bối cảnh của trò chơi được đặt trên một hành tinh lạ, vào năm 2070. Khi đó, công nghệ đã phát triển vượt bậc, người máy dần được ưa dùng cho những chuyến thám hiểm không gian nhờ vào khả năng tự sạc lại pin và tiếp xúc với những môi trường nguy hiểm.
+### Cốt truyện

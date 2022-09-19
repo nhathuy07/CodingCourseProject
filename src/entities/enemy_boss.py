@@ -72,7 +72,7 @@ class EnemyBoss():
     def update(self, world: World, session: Session):
         if self.alive:
             # choose an attack method randomly
-            self.attack_interval = randint(3, 5)
+            self.attack_interval = randint(2, 5)
             self.sound_played = False
             self.wandering_dy = randint(self.dy - 6, self.dy + 4)
             

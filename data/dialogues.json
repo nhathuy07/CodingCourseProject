@@ -1,6 +1,6 @@
 {
   "intro_story": [
-    "It's the year 2050. Recent breakthroughs in space technology have made it more common to use robots for space missions. This method of space exploration requires less resource and time, as robots don't need food, drink and oxygen, and their batteries can be recharged using solar panel.",
+    "It's the year 2070. Recent breakthroughs in space technology have made it more common to use robots for space missions. Robots can be exposed to hazardous environment, and their batteries can be recharged via solar panels, meaning that more, potentially dangerous planets can be explored at a lower cost.",
     "Mark, an astronaut robot, is travelling through space in search for life outside planet Earth. Things have been quite good so far, ...",
     "...when suddenly, an asteroid flies past, colliding with his spaceship. The collision destroyed the rear compartment of the ship, forcing him to perform a crash landing.",
     "Fortunately, Mark managed to land on a nearby planet. Now, he's seeking for help to repair his severely damaged spacecraft.",
@@ -66,7 +66,7 @@
     ],
     [
       {
-        "speaker": "Monster",
+        "speaker": "Floating Beast",
         "line": "How dare you killed my people! I won't let you get away with that!"
       }
     ]
@@ -75,7 +75,7 @@
       "intro": ["With Roger's help, Mark is confident that he can contiue his journey.", "But he's seriously wrong! An angry giant is blocking his way, ready to smash him into pieces."],
       "audio_sequence": ["spaceship_launch.wav", "monster_growling.wav"]
   },
-  "outro": ["Having beaten the giant monster, Mark flew away from the planet, continuing his journey to explore more about life outside Earth."],
+  "outro": ["Having beaten the Floating Beast, Mark flew away from the planet, continuing his journey to explore more about life outside Earth."],
   "outro_audio_sequence": ["spaceship_launch.wav"]
   
 }
