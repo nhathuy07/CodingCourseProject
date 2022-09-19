@@ -83,7 +83,7 @@ class EnemyBoss():
                 self.player_loc = [world.player.rect.centerx, world.player.rect.centery]
                 self.last_location_call = time()
             
-            error = randint(-200, 0)
+            error = randint(-400, -100)
 
             if self.rect.y < 0 or self.rect.centery < self.player_loc[1] + error:
                 self.vertical_wandering_direction = "down"
@@ -132,7 +132,7 @@ class EnemyBoss():
                     self.state = BossState.DroppingBomb
                     if not self.meteorite_spawned:
                         for _ in range(self.simultaneous_meteorite_spawn):
-                            world.entities.append(EnemyBullet(session, randint(0, int(get_window_size()[0])), 0, 0, 7, 0.3, 30, True))
+                            world.entities.append(EnemyBullet(session, randint(30, int(get_window_size()[0])), _ * -320, 0, 7, 0.3, 30, True))
                             self.meteorite_spawned = True
 
                 self.last_attack_time = time()
