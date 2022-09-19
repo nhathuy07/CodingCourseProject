@@ -1,4 +1,5 @@
 import ctypes
+from platform import platform
 from random import SystemRandom, choice, randint
 from time import time
 from common import extra_types
@@ -30,6 +31,8 @@ from entities import collectible, liquid, player
 from pygame import KEYDOWN, KEYUP, K_ESCAPE, MOUSEBUTTONDOWN, event, font, key
 from visual_fx.trail_fx import TrailFx
 from pygame import mixer
+from aquaui import Alert, Buttons
+
 
 class World:
     def __init__(self, session: Session, level: Levels) -> None:
@@ -317,14 +320,24 @@ class World:
             self.inventory_check(session)
             
         else:
-            ret_val = ctypes.windll.user32.MessageBoxW(0, "The game is paused. \nWanna return to Level Menu? You'll lose any progress made in this level.", "Game Paused", 0x04 | 0x30)
-            if ret_val == 6:
-                event.post(event.Event(GO_TO_LV_SELECTION))
-                mixer.music.stop()
-                mixer.music.unload()
-            else:
-                self.paused = False
-                ret_val = None
+            if platform() == "Windows":
+                ret_val = ctypes.windll.user32.MessageBoxW(0, "The game is paused. \nWanna return to Level Menu? You'll lose any progress made in this level.", "Game Paused", 0x04 | 0x30)
+                if ret_val == 6:
+                    event.post(event.Event(GO_TO_LV_SELECTION))
+                    mixer.music.stop()
+                    mixer.music.unload()
+                else:
+                    self.paused = False
+                    ret_val = None
+            elif platform() == "Darwin":
+                alert = Alert("The game is paused. Wanna resume the game?").with_buttons(Buttons["Resume", "Exit to Level Menu"]).show()
+                if alert == "Resume":
+                    self.paused = False
+                    alert = None
+                elif alert == "Exit to Level Menu":
+                    event.post(event.Event(GO_TO_LV_SELECTION))
+                    mixer.music.stop()
+                    mixer.music.unload()
 
     def pause_check(self):
         if key.get_pressed()[K_ESCAPE]:
