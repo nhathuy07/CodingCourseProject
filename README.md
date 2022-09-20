@@ -42,6 +42,7 @@ Cuối trò chơi, sau khi tiêu diệt Floating Beast, Mark đã có thể ti�
 3. Hệ thống Cutscenes trong trò chơi có lồng **hiệu ứng âm thanh** (tiếng động cơ phản lực, giọng của người máy, v.v) để tăng độ sinh động.
 4. Trong suốt màn chơi, người chơi sẽ được thấy nhiều **hiệu ứng hình ảnh** khác nhau (lửa phun từ động cơ của người máy, đạn phát nổ, đất lở ra và rơi cùng thạch nhũ,...)
 5. Tiến trình chơi được **tự động lưu lại** sau mỗi màn chơi để người chơi có thể chơi tiếp vào những lần sau.
+6. Thời gian Boss ra đòn tấn công là **ngẫu nhiên**, khiến người chơi phải luôn cảnh giác.
 
 ## Sản phẩm này có sử dụng mã nguồn / hình ảnh / âm thanh từ các nguồn sau
 ****
