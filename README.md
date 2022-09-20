@@ -1,6 +1,7 @@
 # Dự án trò chơi: Space Miner
 
 ## Người tham gia
+****
 Nguyễn Đình Nhật Huy [huyndn2007@gmail.com](mailto:huyndn2007@gmail.com)
 
 ## Cách cài đặt thư viện và chạy chương trình
@@ -10,6 +11,7 @@ Nguyễn Đình Nhật Huy [huyndn2007@gmail.com](mailto:huyndn2007@gmail.com)
 3. Cài đặt các thư viện: `python -m pip install -r requirements.txt`
 
 ## Mô tả trò chơi
+****
 ### Nhân vật
 1. **Mark**: Đây là một người máy phi hành gia, có nhiệm vụ thực hiện các chuyến thám hiểm ở xa Trái Đất nhưng không may bị gặp nạn và phải sửa tàu. Xuyên suốt trò chơi, người chơi sẽ điều khiển nhân vật này di chuyển qua địa hình bằng `Phím mũi tên Trái / Phải`, nhảy qua chướng ngại vật bằng phím `Spacebar`, bắn hạ quái vật bằng phím `F` và đi xuyên qua các vật phẩm (quặng, tăng sức mạnh) để nhận chúng.<br>
 ⚠️**GIỚI HẠN CỦA NHÂN VẬT**:<br>
@@ -33,3 +35,22 @@ Vậy là, Mark lên đường, vượt qua bốn cái hang khác nhau, vừa th
 
 Sau khi sửa xong con tàu, Mark lại tiếp tục cuộc hành trình, nhưng mọi chuyện vẫn chưa kết thúc ở đó. Floating Beast - trùm cuối của trò chơi - đã phát hiện ra rằng những thuộc hạ của hắn bị tiêu diệt nên rất tức giận và quyết đấu với Mark một trận ngoài không gian. Trong suốt trận đấu, Mark bị tấn công dồn dập bởi những luồng đạn, những cơn mưa thiên thạch và những luồng sóng âm mạnh đến mức có thể đẩy văng cậu ta đi xa.
 Cuối trò chơi, sau khi tiêu diệt Floating Beast, Mark đã có thể tiếp tục chuyến khám phá của mình.
+
+### Điểm nổi bật trong trò chơi
+1. Các nút chọn màn chơi trong giao diện được biểu thị bằng **hình ảnh đại diện** thay vì chỉ bằng văn bản.
+2. Trò chơi cho phép người dùng chơi các màn chơi theo **bất cứ thứ tự nào**, không nhất thiết phải chơi lần lượt từ **màn 1, màn 2, màn 3, v.v.**
+3. Hệ thống Cutscenes trong trò chơi có lồng **hiệu ứng âm thanh** (tiếng động cơ phản lực, giọng của người máy, v.v) để tăng độ sinh động.
+4. Trong suốt màn chơi, người chơi sẽ được thấy nhiều **hiệu ứng hình ảnh** khác nhau (lửa phun từ động cơ của người máy, đạn phát nổ, đất lở ra và rơi cùng thạch nhũ,...)
+5. Tiến trình chơi được **tự động lưu lại** sau mỗi màn chơi để người chơi có thể chơi tiếp vào những lần sau.
+
+## Sản phẩm này có sử dụng mã nguồn / hình ảnh / âm thanh từ các nguồn sau
+****
+* <a href="https://www.flaticon.com/free-icons/asteroid" title="Asteroid icons">Asteroid icons created by monkik - Flaticon</a><br>
+* Galaxy background vector created by pikisuperstar - www.freepik.com<br>
+* Watercolor planet collection with gas rings created by pikisuperstar - Freepik<br>
+* [freesound.org](https://freesound.org)
+* [mixkit.co](https://mixkit.co)
+* [pixabay.com](https://pixabay.com)
+* [https://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python](https://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python)
+* [https://github.com/STEAMforVietnam/cs102](https://github.com/STEAMforVietnam/cs102)
+* [https://www.pygame.org/wiki/](https://www.pygame.org/wiki/)
