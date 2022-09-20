@@ -16,10 +16,20 @@ Nguyễn Đình Nhật Huy [huyndn2007@gmail.com](mailto:huyndn2007@gmail.com)
     * Sau khi bắn một viên đạn, người chơi phải chờ khoảng **0.2 giây** để bắn viên tiếp theo
     * Nhân vật được cung cấp 100 HP, và **không thể** hồi lại HP trong suốt màn chơi.
     * Nếu bị rơi xuống vũng chất lỏng ăn mòn, lượng HP của nhân vật sẽ tụt xuống 0 **gần như lập tức**.
+    * Nhân vật có tốc độ giới hạn, và cần mất một khoảng thời gian ngắn (dưới **1s** từ khi bắt đầu di chuyển) để đạt **tốc độ tối đa.**, và phải mất một khoảng thời gian kể từ khi nhả phím `Trái / Phải` để **dừng di chuyển hoàn toàn**.
 
 2. **Roger**: Nhân vật này sở hữu dịch vụ sửa chữa phương tiện giao thông, là người đã đề nghị sửa chữa tàu cho nhân vật chính, đổi lại, nhân vật chính đi khai thác quặng cho anh ta. Nhân vật này chỉ xuất hiện ở đoạn hội thoại mở đầu của trò chơi, và đoạn hội thoại cuối khi con tàu của nhân vật chính đã được sửa chữa xong.
 3. **Monster**: Những sinh vật ngoài hành tinh, trú ngụ trong hang động và luôn nhăm nhe tấn công nhân vật chính. Chúng có ba chủng màu khác nhau: đỏ, nâu và đen, mỗi chủng đều có tốc độ di chuyển, sức mạnh và lượng HP khác nhau. Trong số các loài trên, loài màu đen là đặc biệt hơn cả, vì khi bị tiêu diệt, chúng sẽ thải ra một loại **thanh năng lượng**.
-4. **Floating Beast**: Trùm cuối của trò chơi, có tính cách hung hãn, và xuất hiện sau khi nhân vật chính đã sửa chữa xong tàu. Khi phát hiện ra nhân vật chính đã thâm nhập vào hang động và tiêu diệt thuộc hạ, tên trùm cuối đã nổi giận và quyết hạ gục người chơi trong một trận đấu **ngoài không gian**. Trong suốt trận đấu, Floating Beast liên tục tấn công người chơi bằng những luồng đạn, những cơn mưa thiên thạch và những tiếng gào thét to đến mức có thể đẩy bật người chơi xuống vực.
+4. **Floating Beast**: Trùm cuối của trò chơi, có tính cách hung hãn, và xuất hiện khi nhân vật chính chuẩn bị rời khỏi hành tinh. Khi phát hiện ra nhân vật chính đã thâm nhập vào hang động và tiêu diệt thuộc hạ, tên trùm cuối đã nổi giận và quyết hạ gục người chơi trong một trận đấu **ngoài không gian**. Trong suốt trận đấu, Floating Beast liên tục tấn công người chơi bằng những luồng đạn, những cơn mưa thiên thạch và những tiếng gào thét to đến mức có thể đẩy bật người chơi xuống vực.
 ### Bối cảnh
-Bối cảnh của trò chơi được đặt trên một hành tinh lạ, vào năm 2070. Khi đó, công nghệ đã phát triển vượt bậc, người máy dần được ưa dùng cho những chuyến thám hiểm không gian nhờ vào khả năng tự sạc lại pin và tiếp xúc với những môi trường nguy hiểm.
+1. Bối cảnh của trò chơi được đặt trên một hành tinh lạ, vào năm 2070. Khi đó, công nghệ đã phát triển vượt bậc, người máy dần được ưa dùng cho những chuyến thám hiểm không gian nhờ vào khả năng tự sạc lại pin và tiếp xúc với những môi trường nguy hiểm.<br>
+
+2. Ở mỗi ván chơi, thời gian là không giới hạn. Màn chơi sẽ kết thúc khi người chơi thu thập đủ số quặng được yêu cầu, hoặc khi nhân vật bị hư hại hoàn toàn (lượng HP tụt về 0)
+
 ### Cốt truyện
+Mark - một người máy phi hành gia -  đang thực hiện chuyến thám hiểm vũ trụ. Chuyến đi diễn ra rất suôn sẻ, nhưng một tảng thiên thạch lớn đã va mạnh vào phần sau của con tàu, khiến con tàu bị hư hại nặng và phải hạ cánh khẩn cấp xuống một hành tinh lạ có bề mặt màu xanh dương. Sau khi hạ cánh, người máy đã tìm được tiệm sửa chữa phương tiện giao thông của Roger. Khi biết tàu của Mark phải thay nhiều bộ phận quan trọng nhưng cậu không có một xu dính túi, Roger đã gợi ý cậu đi khai thác quặng dưới hang để thanh toán chi phí sửa chữa và không quên dặn cậu rằng dưới hang có rất nhiều mối nguy.<br>
+
+Vậy là, Mark lên đường, vượt qua bốn cái hang khác nhau, vừa thu thập đủ quặng, vừa phải coi chừng bị tấn công, vừa phải tránh những vũng nước có khả năng ăn mòn cực cao. Và, mỗi lần đi khai thác thành công, một bộ phận trên chiếc tàu sẽ được thay mới.<br>
+
+Sau khi sửa xong con tàu, Mark lại tiếp tục cuộc hành trình, nhưng mọi chuyện vẫn chưa kết thúc ở đó. Floating Beast - trùm cuối của trò chơi - đã phát hiện ra rằng những thuộc hạ của hắn bị tiêu diệt nên rất tức giận và quyết đấu với Mark một trận ngoài không gian. Trong suốt trận đấu, Mark bị tấn công dồn dập bởi những luồng đạn, những cơn mưa thiên thạch và những luồng sóng âm mạnh đến mức có thể đẩy văng cậu ta đi xa.
+Cuối trò chơi, sau khi tiêu diệt Floating Beast, Mark đã có thể tiếp tục chuyến khám phá của mình.

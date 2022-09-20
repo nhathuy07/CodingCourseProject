@@ -34,9 +34,6 @@ class MainMenu:
                 "Start Over", action=lambda: pg.event.post(pg.event.Event(events.PLAY)) 
             )
         self.menu.add.button(
-            "Help", action=lambda: pg.event.post(pg.event.Event(events.HELP))
-        )
-        self.menu.add.button(
             "About", action=lambda: pg.event.post(pg.event.Event(events.ABOUT))
         )
         self.menu.add.button("Exit", action=lambda: pg.event.post(pg.event.Event(QUIT)))
