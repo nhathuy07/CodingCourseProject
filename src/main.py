@@ -176,16 +176,21 @@ if __name__ == "__main__":
             elif e.type == pygame.QUIT or (
                 e.type == pygame.KEYDOWN and e.key == pygame.KMOD_ALT | pygame.K_F4
             ):
-                if (
-                    ctypes.windll.user32.MessageBoxW(
-                        0,
-                        "Do you want to exit the game? Unsaved progress (if any) will be lost.",
-                        "Exiting...",
-                        0x04 | 0x30,
-                    )
-                    == 6
-                ):
-                    quit()
+                if system() == "Windows":
+                    if (
+                        ctypes.windll.user32.MessageBoxW(
+                            0,
+                            "Do you want to exit the game? Unsaved progress (if any) will be lost.",
+                            "Exiting...",
+                            0x04 | 0x30,
+                        )
+                        == 6
+                    ):
+                        quit()
+                elif system() == "Darwin":
+                    result = Alert("Do you want to exit the game? Unsaved progress (if any) will be lost.").with_buttons(Buttons(["Yes", "No"])).show()
+                    if result.button_returned == "Yes":
+                        quit()
             elif e.type == events.MAIN_MENU:
                 current_screen = MainMenu(session, display)
                 pygame.event.clear()

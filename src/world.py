@@ -1,5 +1,5 @@
 import ctypes
-from platform import platform
+from platform import platform, system
 from random import SystemRandom, choice, randint
 from time import time
 from common import extra_types
@@ -34,7 +34,7 @@ from pygame import mixer
 from aquaui import Alert, Buttons
 
 
-class World:
+class World():
     def __init__(self, session: Session, level: Levels) -> None:
         self.level = level
         self.scheme = Scheme[session.level_data[self.level.name]["Scheme"]]
@@ -262,7 +262,7 @@ class World:
                 elif type(e).__name__ == "EnemyBoss":
                     e.render(display, self, session)
                     e.rect.left += self.delta_screen_offset
-                elif type(e).__name__ == "PlayerBullet" or type(e).__name__ == "EnemyBullet":
+                elif type(e).__name__ == "EnemyBullet":
                     e.rect.left = self.abs_screen_offset + e.init_coord[0]
                     e.update(self.entities)
                     e.render(display, self.entities)
@@ -320,7 +320,7 @@ class World:
             self.inventory_check(session)
             
         else:
-            if platform() == "Windows":
+            if system() == "Windows":
                 ret_val = ctypes.windll.user32.MessageBoxW(0, "The game is paused. \nWanna return to Level Menu? You'll lose any progress made in this level.", "Game Paused", 0x04 | 0x30)
                 if ret_val == 6:
                     event.post(event.Event(GO_TO_LV_SELECTION))
@@ -329,7 +329,7 @@ class World:
                 else:
                     self.paused = False
                     ret_val = None
-            elif platform() == "Darwin":
+            elif system() == "Darwin":
                 alert = Alert("The game is paused. Wanna resume the game?").with_buttons(Buttons["Resume", "Exit to Level Menu"]).show()
                 if alert == "Resume":
                     self.paused = False
