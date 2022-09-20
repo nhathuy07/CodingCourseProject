@@ -5,7 +5,7 @@ from common.extra_types import Projectiles
 from session import Session
 from visual_fx.dripstone_falling_fx import DripstoneFallingFx
 
-#from world import World
+
 class Dripstone():
     def __init__(self, session: Session, x, y, dy = DripstoneConfig.Dy, damage = DripstoneConfig.Damage, scale_min = DripstoneConfig.ScaleMin, scale_max = DripstoneConfig.ScaleMax, gravity = DripstoneConfig.Gravity, terminal_velocity = DripstoneConfig.TerminalVelocity, spawn_error = DripstoneConfig.SpawnError, dripstone_type = Projectiles.Dripstone) -> None:
         self.x = x

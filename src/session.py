@@ -15,14 +15,15 @@ from common.paths import ASSETS_PATH
 #from common.types import BossState, Ground, Items, MobState, Mobs, PlayerState, Projectiles, Scheme
 from common.utils import load_img
 from common import extra_types
+import json
+from pathlib import Path
+
+from pygame import display
+
 mixer.init()
 
 class Session():
     def __init__(self):
-        import json
-        from pathlib import Path
-
-        from pygame import display
 
 
 
@@ -231,9 +232,6 @@ class Session():
             self.sfx[i.name] = mixer.Sound(i)
 
     def load_or_create_savefile(self):
-        import json
-
-        from common import paths
 
         self.userSavefilePath = paths.DATA_PATH / "player_savefile.json"
         if os.path.exists(str(self.userSavefilePath)):
@@ -247,19 +245,12 @@ class Session():
             self.playerData["earned_items"].append(item.name)
 
     def update_savefile(self):
-        import json
-
-        from common import paths
 
         self.userSavefilePath = paths.DATA_PATH / "player_savefile.json"
         with open(self.userSavefilePath, "w") as saveFileIOWrapper:
             saveFileIOWrapper.write(json.dumps(self.playerData))
 
     def override_savefile(self):
-        import json
-
-        from common import paths
-
         self.userSavefilePath = paths.DATA_PATH / "player_savefile.json"
         with open(self.userSavefilePath, "w") as saveFileIOWrapper:
             self.playerData["earned_items"] = []
@@ -267,7 +258,6 @@ class Session():
             saveFileIOWrapper.write(json.dumps(self.playerData))
 
     def update_section(self):
-        from common import extra_types
 
         if self.playerData["current_lvl"] == None:
             self.section = extra_types.GameSection.INTRO

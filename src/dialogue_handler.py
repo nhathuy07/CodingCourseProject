@@ -45,7 +45,6 @@ class Dialogue:
         #self.sound.play()
 
         if self.line < len(self.dialog_list[self.section]):
-            from common import config
 
             display.fill((0, 0, 0))
 

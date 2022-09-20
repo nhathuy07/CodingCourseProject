@@ -1,8 +1,5 @@
 from common import extra_types
-
 from session import Session
-
-
 class Ground:
     def __init__(
         self, session: Session, variation: extra_types.Ground, scheme: extra_types.Scheme, x, y
