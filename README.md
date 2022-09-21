@@ -1,5 +1,5 @@
 # Dự án trò chơi: Space Miner
-
+**NOTICE: Vì mình không kịp edit video nên chỉ đăng được clip gốc (2 clip quay webcam) nên các bạn đọc file README giúp mình nhé. Mong các bạn thông cảm.**
 ## Người tham gia
 ****
 Nguyễn Đình Nhật Huy [huyndn2007@gmail.com](mailto:huyndn2007@gmail.com)
