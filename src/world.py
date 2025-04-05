@@ -1,4 +1,3 @@
-import ctypes
 from platform import platform
 from random import SystemRandom, choice, randint
 from time import time
@@ -19,6 +18,10 @@ from common.events import (
     MISSION_COMPLETED,
     PLAYER_DIED,
 )
+
+from tkinter import messagebox
+
+
 from common.extra_types import Collectibles, Items, Levels, Liquid, Mobs, Ores, Projectiles, Scheme
 from entities.dripstone import Dripstone
 from entities.enemy import Enemy
@@ -31,8 +34,6 @@ from entities import collectible, liquid, player
 from pygame import KEYDOWN, KEYUP, K_ESCAPE, MOUSEBUTTONDOWN, event, font, key
 from visual_fx.trail_fx import TrailFx
 from pygame import mixer
-from aquaui import Alert, Buttons
-
 
 class World:
     def __init__(self, session: Session, level: Levels) -> None:
@@ -286,19 +287,15 @@ class World:
                     mixer.music.unload()
                     session.sfx["death.wav"].play()
                     if not self.retry_prompt:
-                        ret_val = ctypes.windll.user32.MessageBoxW(
-                            0,
-                            "Your character is damaged. Retry?",
-                            "Mission failed",
-                            0x04 | 0x10,
-                        )
+                        ret_val = messagebox.askyesno("Mission failed", "Your character is damaged. Retry?")
+
                         self.retry_prompt = True
-                    if ret_val == 6:
+                    if ret_val:
                         if self.level != Levels.BOSS:
                             event.post(event.Event(Items[self.level.name].value))
                         else:
                             event.post(event.Event(BOSS_LVL_INTRO))
-                    elif ret_val == 7:
+                    else:
                         event.post(event.Event(GO_TO_LV_SELECTION))
 
             for e in self.effects:
@@ -320,24 +317,15 @@ class World:
             self.inventory_check(session)
             
         else:
-            if platform() == "Windows":
-                ret_val = ctypes.windll.user32.MessageBoxW(0, "The game is paused. \nWanna return to Level Menu? You'll lose any progress made in this level.", "Game Paused", 0x04 | 0x30)
-                if ret_val == 6:
-                    event.post(event.Event(GO_TO_LV_SELECTION))
-                    mixer.music.stop()
-                    mixer.music.unload()
-                else:
-                    self.paused = False
-                    ret_val = None
-            elif platform() == "Darwin":
-                alert = Alert("The game is paused. Wanna resume the game?").with_buttons(Buttons["Resume", "Exit to Level Menu"]).show()
-                if alert == "Resume":
-                    self.paused = False
-                    alert = None
-                elif alert == "Exit to Level Menu":
-                    event.post(event.Event(GO_TO_LV_SELECTION))
-                    mixer.music.stop()
-                    mixer.music.unload()
+            ret_val = messagebox.askyesno("Paused!", "Game paused. Wanna resume?\nYES to Resume\nNO to Exit to Menu")
+            if not ret_val:
+                event.post(event.Event(GO_TO_LV_SELECTION))
+                mixer.music.stop()
+                mixer.music.unload()
+            else:
+                self.paused = False
+                ret_val = None
+            
 
     def pause_check(self):
         if key.get_pressed()[K_ESCAPE]:

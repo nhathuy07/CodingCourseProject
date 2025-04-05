@@ -1,4 +1,4 @@
-import ctypes
+
 import os
 from platform import platform, system
 from boss_level import BossLevel
@@ -13,7 +13,9 @@ from level_selection_menu import LvSelection
 import pygame
 from common import config, events
 from world import World
-from aquaui import Alert, Buttons, AlertType
+
+from tkinter import messagebox
+
 pygame.mixer.init()
 pygame.mixer.set_num_channels(3)
 
@@ -82,13 +84,7 @@ if __name__ == "__main__":
                 # display a "Start a new game" confirmation box if player has already made progress
                 if not session.is_newgame():
                     if (
-                        ctypes.windll.user32.MessageBoxW(
-                            0,
-                            "Starting a new game will erase any progress that you have made. Continue?",
-                            "Start a new game",
-                            4,
-                        )
-                        == 6
+                        messagebox.askyesno("Start a new game", "Starting a new game will erase any progress that you have made. Continue?")
                     ):
                         # erase progress and start new game if user choose "Yes"
                         session.override_savefile()
@@ -177,13 +173,15 @@ if __name__ == "__main__":
                 e.type == pygame.KEYDOWN and e.key == pygame.KMOD_ALT | pygame.K_F4
             ):
                 if (
-                    ctypes.windll.user32.MessageBoxW(
-                        0,
-                        "Do you want to exit the game? Unsaved progress (if any) will be lost.",
-                        "Exiting...",
-                        0x04 | 0x30,
-                    )
-                    == 6
+                    # ctypes.windll.user32.MessageBoxW(
+                    #     0,
+                    #     "Do you want to exit the game? Unsaved progress (if any) will be lost.",
+                    #     "Exiting...",
+                    #     0x04 | 0x30,
+                    # )
+                    # == 6
+
+                    messagebox.askyesno("exiting...", "Do you want to exit the game? Unsaved progress (if any) will be lost.",) 
                 ):
                     quit()
             elif e.type == events.MAIN_MENU:
@@ -205,14 +203,23 @@ if __name__ == "__main__":
 
             elif e.type == events.ABOUT:
                 # do a platform check since ctypes and aquaui are platform-dependent
-                if system() == "Windows":
-                    ret_val = ctypes.windll.user32.MessageBoxW(0, "SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes", "About", 0x0|0x40)
-                    if ret_val == 1:
-                        pygame.event.post(pygame.event.Event(events.MAIN_MENU))
-                elif system() == "Darwin":
-                    buttons = Buttons(["Ok"], "Ok")
-                    result = Alert("SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes").with_buttons(buttons).show()
-                    if result.button_returned == "Ok":
-                        pygame.event.post(pygame.event.Event(events.MAIN_MENU))
+                # if system() == "Windows":
+                #     ret_val = ctypes.windll.user32.MessageBoxW(0, "SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes", "About", 0x0|0x40)
+                #     if ret_val == 1:
+                #         pygame.event.post(pygame.event.Event(events.MAIN_MENU))
+                # elif system() == "Darwin":
+                #     buttons = Buttons(["Ok"], "Ok")
+                #     result = Alert("SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8\nctypes").with_buttons(buttons).show()
+                #     if result.button_returned == "Ok":
+                #         pygame.event.post(pygame.event.Event(events.MAIN_MENU))
+
+                from tkinter import messagebox
+
+                ret = messagebox.showinfo("About",  "SPACE MINER\nA small game by Nhat Huy\n\n--Credits for third-party assets--\nGalaxy background vector created by pikisuperstar - www.freepik.com\nAsteroid icons created by monkik - Flaticon\nWatercolor planet collection with gas rings created by pikisuperstar - Freepik\nSound FX from freesound.org, mixkit.co and pixabay.com.\n\n--This game uses code snippets from--\nhttps://stackoverflow.com/questions/44721221/natural-sort-of-list-containing-paths-in-python\nhttps://github.com/STEAMforVietnam/cs102\nhttps://www.pygame.org/wiki/\n\n--Libraries used--\npygame 2.1.2\npygame-menu 4.2.8")
+                
+                if ret:
+                    pygame.event.post(pygame.event.Event(events.MAIN_MENU))
+
+
         pygame.display.flip()
         clock.tick(60)

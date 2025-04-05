@@ -7,10 +7,13 @@ from pygame import key as pg_key
 from common.extra_types import Items
 from session import Session
 from common import config, events
-from ctypes import windll
-from aquaui import AlertType, Alert, Buttons
 
-messageBox = windll.user32.MessageBoxW
+# from ctypes import windll
+# from aquaui import AlertType, Alert, Buttons
+
+from tkinter import messagebox
+
+# messageBox = windll.user32.MessageBoxW
 
 from session import Session
 
@@ -78,15 +81,18 @@ class LvSelection():
                         for item in Items._member_names_:
                             if session.rects[item].collidepoint(pg_mouse.get_pos()):
                                 if item in session.playerData["earned_items"]:
-                                    if platform() == "Windows":
-                                        messageBox(
-                                            0,
-                                            "There's no need to collect an item twice!",
-                                            "Message",
-                                            0x40,
-                                        )
-                                    elif platform() == "Darwin":
-                                        alert = Alert("There's no need to collect an item twice!").of_type(AlertType.INFORMATIONAL).show()
+                                    # if platform() == "Windows":
+                                    #     messageBox(
+                                    #         0,
+                                    #         "There's no need to collect an item twice!",
+                                    #         "Message",
+                                    #         0x40,
+                                    #     )
+                                    # elif platform() == "Darwin":
+                                    #     alert = Alert("There's no need to collect an item twice!").of_type(AlertType.INFORMATIONAL).show()
+
+                                    messagebox.showinfo("Message", "There's no need to collect an item twice!")
+
                                 else:
                                     self.sound = session.sfx["click.wav"]
                                     self.sound.play()

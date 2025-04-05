@@ -204,12 +204,14 @@ class Session():
         # load mobs
         self.mobs_dir = ASSETS_PATH / "mobs"
         self.mobs = {}
+        print(extra_types.MobState._member_names_)
         for p in extra_types.Mobs._member_names_:
             self.mobs[p] = {}
             for d in (self.mobs_dir / p).glob("*"):
                 for m in extra_types.MobState._member_names_:
+                    print(f"SETTING self.mobs[{p}][{m}]")
                     self.mobs[p][m] = list(
-                        map(load_img, Path(self.mobs_dir / p.lower() / m.lower()).glob("*"))
+                        map(load_img, Path(self.mobs_dir / p / m).glob("*"))
                     )
 
         # load boss
