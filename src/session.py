@@ -76,7 +76,7 @@ class Session():
 
         self.dialogue_scenes_path = paths.ASSETS_PATH / "dialogue_scenes"
         self.dialogue_scenes = tuple(
-            map(utils.load_img, Path(self.dialogue_scenes_path).glob("*.png"))
+            map(utils.load_img, sorted(Path(self.dialogue_scenes_path).glob("*.png")))
         )
 
         # load level data
@@ -140,7 +140,7 @@ class Session():
         # load level backgrounds
         self.level_bg_dir = paths.ASSETS_PATH / "background" / "levels"
         self.background = tuple(
-            map(utils.load_img, Path(self.level_bg_dir).glob("*.png"))
+            map(utils.load_img, sorted(Path(self.level_bg_dir).glob("*.png")))
         )
 
         # Load player sprite

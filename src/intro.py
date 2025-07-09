@@ -23,7 +23,7 @@ class Intro():
             self.background_path = paths.ASSETS_PATH / "background"
             self.intro_scenes_path = paths.ASSETS_PATH / "intro_scenes"
             self.intro_scenes = tuple(
-                map(utils.load_img, Path(self.intro_scenes_path).glob("*.png"))
+                map(utils.load_img, sorted(Path(self.intro_scenes_path).glob("*.png")))
             )
             with open(self.dialogue_path) as r:
                 data = json.load(r)
